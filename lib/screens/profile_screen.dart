@@ -33,15 +33,15 @@ class ProfileScreen extends StatelessWidget {
           children: [
             _buildProfileHeader(),
             const SizedBox(height: 24),
-            _buildQuoteOfTheDay(),
+            _buildQuoteOfTheDay(context),
             const SizedBox(height: 24),
-            _buildQuickStats(),
+            _buildQuickStats(context),
             const SizedBox(height: 24),
-            _buildAchievements(),
+            _buildAchievements(context),
             const SizedBox(height: 24),
-            _buildPreferences(),
+            _buildPreferences(context),
             const SizedBox(height: 24),
-            _buildAboutApp(),
+            _buildAboutApp(context),
           ],
         ),
       ),
@@ -130,7 +130,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuoteOfTheDay() {
+  Widget _buildQuoteOfTheDay(BuildContext context) {
     final quote = StaticData.motivationalQuotes[
         math.Random().nextInt(StaticData.motivationalQuotes.length)
     ];
@@ -168,7 +168,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickStats() {
+  Widget _buildQuickStats(BuildContext context) {
     return Consumer2<ProgressProvider, CourseProvider>(
       builder: (context, progressProvider, courseProvider, child) {
         final totalCourses = courseProvider.totalCourseCount;
@@ -250,7 +250,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAchievements() {
+  Widget _buildAchievements(BuildContext context) {
     return Consumer<ProgressProvider>(
       builder: (context, progressProvider, child) {
         final completedVideos = progressProvider.userProgress.completedVideosCount;
@@ -357,7 +357,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPreferences() {
+  Widget _buildPreferences(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppConstants.defaultPadding),
       decoration: AppTheme.cardDecoration,
@@ -445,7 +445,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAboutApp() {
+  Widget _buildAboutApp(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppConstants.defaultPadding),
       decoration: AppTheme.cardDecoration,

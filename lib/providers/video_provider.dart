@@ -86,7 +86,7 @@ class VideoProvider with ChangeNotifier {
   // Seek to position
   Future<void> seekTo(Duration position) async {
     if (_controller != null) {
-      await _controller!.seekTo(position);
+      _controller!.seekTo(position);
     }
   }
 
@@ -102,7 +102,7 @@ class VideoProvider with ChangeNotifier {
   // Set volume
   Future<void> setVolume(int volume) async {
     if (_controller != null) {
-      await _controller!.setVolume(volume);
+      _controller!.setVolume(volume);
     }
   }
 
@@ -110,9 +110,9 @@ class VideoProvider with ChangeNotifier {
   Future<void> toggleMute() async {
     if (_controller != null) {
       if (_controller!.value.volume > 0) {
-        await _controller!.setVolume(0);
+        _controller!.setVolume(0);
       } else {
-        await _controller!.setVolume(100);
+        _controller!.setVolume(100);
       }
     }
   }

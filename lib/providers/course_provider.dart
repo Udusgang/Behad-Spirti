@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
-import '../models/models.dart';
+import '../models/category.dart';
+import '../models/course.dart';
+import '../models/video.dart';
 import '../data/static_data.dart';
 
 class CourseProvider with ChangeNotifier {
