@@ -1,0 +1,359 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/providers.dart';
+import '../models/models.dart';
+import '../theme/app_theme.dart';
+import '../utils/constants.dart';
+import '../utils/helpers.dart';
+import '../widgets/category_card.dart';
+import '../widgets/course_card.dart';
+import '../widgets/featured_section.dart';
+import 'course_detail_screen.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await context.read<CourseProvider>().refreshData();
+          },
+          child: CustomScrollView(
+            slivers: [
+              _buildAppBar(),
+              _buildSearchBar(),
+              _buildFeaturedSection(),
+              _buildCategoriesSection(),
+              _buildRecentCoursesSection(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return SliverAppBar(
+      expandedHeight: 120,
+      floating: false,
+      pinned: true,
+      backgroundColor: Colors.transparent,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Container(
+          decoration: AppTheme.gradientDecoration,
+          child: const Padding(
+            padding: EdgeInsets.all(AppConstants.defaultPadding),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Welcome to Spirit',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Discover your spiritual journey',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white70,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.all(AppConstants.defaultPadding),
+        child: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: AppConstants.searchPlaceholder,
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: _searchQuery.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() {
+                        _searchQuery = '';
+                      });
+                    },
+                  )
+                : null,
+          ),
+          onChanged: (value) {
+            setState(() {
+              _searchQuery = value;
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeaturedSection() {
+    if (_searchQuery.isNotEmpty) return const SliverToBoxAdapter(child: SizedBox.shrink());
+
+    return SliverToBoxAdapter(
+      child: Consumer<CourseProvider>(
+        builder: (context, courseProvider, child) {
+          if (courseProvider.isLoading) {
+            return const Padding(
+              padding: EdgeInsets.all(AppConstants.defaultPadding),
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          if (courseProvider.error != null) {
+            return Padding(
+              padding: const EdgeInsets.all(AppConstants.defaultPadding),
+              child: Center(
+                child: Text(
+                  courseProvider.error!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+            );
+          }
+
+          final featuredCourses = courseProvider.getFeaturedCourses();
+          
+          return FeaturedSection(
+            title: 'Featured Courses',
+            courses: featuredCourses,
+            onCourseTap: (course) => _navigateToCourseDetail(course),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildCategoriesSection() {
+    return SliverToBoxAdapter(
+      child: Consumer<CourseProvider>(
+        builder: (context, courseProvider, child) {
+          if (courseProvider.isLoading) {
+            return const SizedBox.shrink();
+          }
+
+          final categories = courseProvider.categories;
+          
+          return Padding(
+            padding: const EdgeInsets.all(AppConstants.defaultPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Categories',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const SizedBox(height: AppConstants.defaultPadding),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: AppHelpers.getGridCrossAxisCount(context),
+                    crossAxisSpacing: AppConstants.defaultPadding,
+                    mainAxisSpacing: AppConstants.defaultPadding,
+                    childAspectRatio: 1.2,
+                  ),
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    final category = categories[index];
+                    return CategoryCard(
+                      category: category,
+                      onTap: () => _navigateToCategory(category),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildRecentCoursesSection() {
+    return SliverToBoxAdapter(
+      child: Consumer<CourseProvider>(
+        builder: (context, courseProvider, child) {
+          if (courseProvider.isLoading) {
+            return const SizedBox.shrink();
+          }
+
+          List<Course> coursesToShow;
+          String sectionTitle;
+
+          if (_searchQuery.isNotEmpty) {
+            coursesToShow = courseProvider.searchCourses(_searchQuery);
+            sectionTitle = 'Search Results';
+          } else {
+            coursesToShow = courseProvider.getRecentCourses();
+            sectionTitle = 'Recent Courses';
+          }
+
+          if (coursesToShow.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.all(AppConstants.defaultPadding),
+              child: Center(
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.search_off,
+                      size: 64,
+                      color: Colors.grey[400],
+                    ),
+                    const SizedBox(height: AppConstants.defaultPadding),
+                    Text(
+                      _searchQuery.isNotEmpty 
+                          ? 'No courses found for "$_searchQuery"'
+                          : AppConstants.noCoursesFound,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Colors.grey[600],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.all(AppConstants.defaultPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  sectionTitle,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const SizedBox(height: AppConstants.defaultPadding),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: AppHelpers.getGridCrossAxisCount(context),
+                    crossAxisSpacing: AppConstants.defaultPadding,
+                    mainAxisSpacing: AppConstants.defaultPadding,
+                    childAspectRatio: AppConstants.gridChildAspectRatio,
+                  ),
+                  itemCount: coursesToShow.length,
+                  itemBuilder: (context, index) {
+                    final course = coursesToShow[index];
+                    return CourseCard(
+                      course: course,
+                      onTap: () => _navigateToCourseDetail(course),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _navigateToCourseDetail(Course course) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CourseDetailScreen(course: course),
+      ),
+    );
+  }
+
+  void _navigateToCategory(Category category) {
+    // For now, we'll show courses from this category
+    // In the future, this could navigate to a dedicated category screen
+    final courseProvider = context.read<CourseProvider>();
+    final categoryCourses = courseProvider.getCoursesByCategory(category.id);
+    
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        maxChildSize: 0.9,
+        minChildSize: 0.5,
+        builder: (context, scrollController) => Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(AppConstants.defaultPadding),
+                child: Text(
+                  category.name,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(AppConstants.defaultPadding),
+                  itemCount: categoryCourses.length,
+                  itemBuilder: (context, index) {
+                    final course = categoryCourses[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: AppConstants.defaultPadding),
+                      child: CourseCard(
+                        course: course,
+                        onTap: () {
+                          Navigator.pop(context);
+                          _navigateToCourseDetail(course);
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
