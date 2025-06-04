@@ -1,14 +1,15 @@
-import 'package:flutter/foundation.dart';
-import '../models/category.dart';
+import 'package:flutter/foundation.dart' hide Category;
 import '../models/course.dart';
 import '../models/video.dart';
+import '../models/user_progress.dart';
+import '../models/category.dart';
 import '../data/static_data.dart';
 
 class CourseProvider with ChangeNotifier {
   List<Category> _categories = [];
   List<Course> _courses = [];
   List<Video> _videos = [];
-  
+
   bool _isLoading = false;
   String? _error;
 
