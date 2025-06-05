@@ -488,9 +488,9 @@ class _VideoScreenState extends State<VideoScreen> {
       widget.video.id,
       widget.video.courseId,
     );
-    
+
     AppHelpers.showSuccessSnackBar(context, AppConstants.videoCompletedMessage);
-    
+
     // Auto-play next video if available
     final videoProvider = context.read<VideoProvider>();
     if (videoProvider.hasNextVideo(widget.courseVideos)) {
@@ -498,5 +498,78 @@ class _VideoScreenState extends State<VideoScreen> {
         videoProvider.loadNextVideo(widget.courseVideos);
       });
     }
+  }
+
+  void _openInYouTube() {
+    // For now, just show the YouTube URL in a dialog
+    // In a real app, you would use url_launcher package to open the URL
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('YouTube Link'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Video URL:'),
+            const SizedBox(height: 8),
+            SelectableText(
+              widget.video.youtubeUrl,
+              style: const TextStyle(
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text('Copy this URL to open in YouTube app or browser.'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _shareVideo() {
+    // For now, just show the share dialog with video info
+    // In a real app, you would use share_plus package
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Share Video'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.video.title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(widget.video.description),
+            const SizedBox(height: 16),
+            const Text('YouTube URL:'),
+            const SizedBox(height: 4),
+            SelectableText(
+              widget.video.youtubeUrl,
+              style: const TextStyle(
+                color: Colors.blue,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
   }
 }
