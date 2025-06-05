@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Spirit - Mobile Learning Application
 
 A modern Flutter-based mobile learning application focused on delivering quality, spiritually inspired educational content via YouTube video playlists.
@@ -58,7 +57,8 @@ lib/
 ### Core Dependencies
 - `flutter`: SDK
 - `provider`: State management
-- `youtube_player_flutter`: YouTube video integration
+- `webview_flutter`: WebView integration for video display
+- `url_launcher`: External app/browser launching
 - `http`: Network requests
 - `cached_network_image`: Efficient image loading
 - `google_fonts`: Typography
@@ -152,21 +152,3 @@ This is a learning project focused on modern Flutter development practices. Cont
 ## 📄 License
 
 This project is for educational purposes and personal use.
-=======
-# myapp
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
->>>>>>> 843df9157bbcc019eaffd46ae4a287991e26c721
