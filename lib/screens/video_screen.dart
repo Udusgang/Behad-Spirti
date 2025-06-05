@@ -116,28 +116,42 @@ class _VideoScreenState extends State<VideoScreen> {
           }
 
           if (videoProvider.controller == null) {
-            return Container(
-              color: Colors.black,
-              child: const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.play_circle_outline,
+          return Container(
+            color: AppTheme.primaryPurple.withOpacity(0.9),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.play_circle_filled,
                       color: Colors.white,
-                      size: 64,
+                      size: 80,
                     ),
-                    SizedBox(height: 16),
-                    CircularProgressIndicator(color: Colors.white),
-                    SizedBox(height: 16),
-                    Text(
-                      'Initializing player...',
-                      style: TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 24),
+                  const CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 3,
+                  ),
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Initializing player...',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            );
+            ),
+          );
           }
 
           return videoProvider.isFullScreen
