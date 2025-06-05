@@ -453,7 +453,7 @@ class ProfileScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'About Spirit',
+            'About Almighty Authority',
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 12),

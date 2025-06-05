@@ -1,8 +1,8 @@
 class AppConstants {
   // App Information
-  static const String appName = 'Spirit';
+  static const String appName = 'Almighty Authority';
   static const String appVersion = '1.0.0';
-  static const String appDescription = 'A modern Flutter-based mobile learning application focused on spiritually inspired educational content.';
+  static const String appDescription = 'A powerful spiritual learning platform that connects you with divine wisdom and ancient knowledge for personal transformation and enlightenment.';
 
   // Navigation
   static const String homeRoute = '/home';
