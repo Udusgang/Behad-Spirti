@@ -101,14 +101,32 @@ class _VideoScreenState extends State<VideoScreen> {
                     child: const Text('Retry'),
                   ),
                   const SizedBox(height: 8),
-                  OutlinedButton.icon(
-                    onPressed: () => _testConnectivity(),
-                    icon: const Icon(Icons.network_check),
-                    label: const Text('Test Internet'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.white),
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => _testConnectivity(),
+                          icon: const Icon(Icons.network_check),
+                          label: const Text('Test Internet'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => _clearWebViewCache(),
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('Clear Cache'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -118,22 +136,43 @@ class _VideoScreenState extends State<VideoScreen> {
           if (videoProvider.controller == null) {
             return Container(
               color: Colors.black,
-              child: const Center(
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.play_circle_outline,
                       color: Colors.white,
                       size: 64,
                     ),
-                    SizedBox(height: 16),
-                    CircularProgressIndicator(color: Colors.white),
-                    SizedBox(height: 16),
-                    Text(
+                    const SizedBox(height: 16),
+                    const CircularProgressIndicator(color: Colors.white),
+                    const SizedBox(height: 16),
+                    const Text(
                       'Initializing player...',
                       style: TextStyle(color: Colors.white),
                     ),
+                    const SizedBox(height: 16),
+                    if (videoProvider.isLoading) ...[
+                      Text(
+                        'Video: ${widget.video.title}',
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'ID: ${widget.video.youtubeId}',
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -203,6 +242,7 @@ class _VideoScreenState extends State<VideoScreen> {
     return Container(
       color: Colors.black,
       child: Column(
+        mainAxisSize: MainAxisSize.min, // Prevent overflow
         children: [
           _buildAppBar(),
           AspectRatio(
@@ -227,6 +267,10 @@ class _VideoScreenState extends State<VideoScreen> {
                 onReady: () {
                   print('✅ YouTube Player Ready - Video: ${widget.video.title}');
                   print('📺 Video ID: ${widget.video.youtubeId}');
+                  // Clear any previous errors when player is ready
+                  if (videoProvider.error != null) {
+                    videoProvider.clearError();
+                  }
                 },
                 onEnded: (metaData) {
                   print('📹 Video Ended: ${widget.video.title}');
@@ -234,7 +278,7 @@ class _VideoScreenState extends State<VideoScreen> {
                 },
                 bottomActions: [
                   CurrentPosition(),
-                  const SizedBox(width: 8.0),
+                  const SizedBox(width: 6.0), // Reduced spacing
                   ProgressBar(
                     isExpanded: true,
                     colors: ProgressBarColors(
@@ -244,9 +288,9 @@ class _VideoScreenState extends State<VideoScreen> {
                       bufferedColor: Colors.grey.shade200,
                     ),
                   ),
-                  const SizedBox(width: 8.0),
+                  const SizedBox(width: 6.0), // Reduced spacing
                   RemainingDuration(),
-                  const SizedBox(width: 4.0),
+                  const SizedBox(width: 2.0), // Reduced spacing
                   FullScreenButton(),
                 ],
               ),
@@ -319,7 +363,7 @@ class _VideoScreenState extends State<VideoScreen> {
 
   Widget _buildPlayerControls(VideoProvider videoProvider) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Reduced padding
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -437,33 +481,42 @@ class _VideoScreenState extends State<VideoScreen> {
           topRight: Radius.circular(24),
         ),
       ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppConstants.defaultPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Handle bar for visual indication
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(2),
-                ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(AppConstants.defaultPadding),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight - AppConstants.defaultPadding * 2,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Handle bar for visual indication
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 16), // Reduced margin
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  _buildVideoInfo(),
+                  const SizedBox(height: 16), // Reduced spacing
+                  _buildActionButtons(),
+                  const SizedBox(height: 16), // Reduced spacing
+                  _buildVideoDescription(),
+                  const SizedBox(height: 16), // Reduced spacing
+                  _buildNextVideoSection(),
+                  const SizedBox(height: 16), // Reduced bottom padding
+                ],
               ),
             ),
-            _buildVideoInfo(),
-            const SizedBox(height: 24),
-            _buildActionButtons(),
-            const SizedBox(height: 24),
-            _buildVideoDescription(),
-            const SizedBox(height: 24),
-            _buildNextVideoSection(),
-            const SizedBox(height: 40), // Extra bottom padding
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -992,6 +1045,28 @@ class _VideoScreenState extends State<VideoScreen> {
     }
   }
 
+  void _clearWebViewCache() async {
+    AppHelpers.showLoadingDialog(context, message: 'Clearing cache...');
+
+    try {
+      // Dispose current controller
+      await context.read<VideoProvider>().disposeController();
+
+      // Wait a moment
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      Navigator.pop(context); // Close loading dialog
+
+      // Reinitialize
+      context.read<VideoProvider>().initializeVideo(widget.video);
+
+      AppHelpers.showInfoSnackBar(context, 'Cache cleared. Retrying video...');
+    } catch (e) {
+      Navigator.pop(context); // Close loading dialog
+      AppHelpers.showErrorSnackBar(context, 'Failed to clear cache: $e');
+    }
+  }
+
   void _showConnectivityResult(String message, bool isSuccess) {
     showDialog(
       context: context,
@@ -1020,10 +1095,11 @@ class _VideoScreenState extends State<VideoScreen> {
               const SizedBox(height: 8),
               const Text(
                 '1. Check WiFi/Mobile data\n'
-                '2. Restart emulator with:\n'
+                '2. Clear WebView cache (button above)\n'
+                '3. Restart emulator with:\n'
                 '   emulator -dns-server 8.8.8.8\n'
-                '3. Try on physical device\n'
-                '4. Cold boot emulator',
+                '4. Try on physical device\n'
+                '5. Cold boot emulator',
                 style: TextStyle(fontSize: 12),
               ),
             ],

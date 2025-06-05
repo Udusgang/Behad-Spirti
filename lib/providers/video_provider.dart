@@ -46,17 +46,31 @@ class VideoProvider with ChangeNotifier {
           hideControls: false,
           hideThumbnail: false,
           disableDragSeek: false,
+          useHybridComposition: true, // Better WebView performance
         ),
       );
 
       // Add listeners
       _controller!.addListener(_onPlayerStateChanged);
 
-      // Wait a moment for controller to initialize
-      await Future.delayed(const Duration(milliseconds: 300));
+      // Wait longer for controller to properly initialize
+      await Future.delayed(const Duration(milliseconds: 800));
 
-      print('✅ YouTube controller initialized');
-      _error = null;
+      // Verify controller is ready
+      int retryCount = 0;
+      while (!_controller!.value.isReady && retryCount < 10) {
+        await Future.delayed(const Duration(milliseconds: 200));
+        retryCount++;
+        print('⏳ Waiting for controller to be ready... (attempt $retryCount)');
+      }
+
+      if (_controller!.value.isReady) {
+        print('✅ YouTube controller initialized and ready');
+        _error = null;
+      } else {
+        print('⚠️ Controller initialized but not ready after retries');
+        // Don't set error here, let it try to work
+      }
     } catch (e) {
       print('❌ Error initializing video: $e');
       _error = 'Failed to initialize video: $e';
@@ -99,33 +113,50 @@ class VideoProvider with ChangeNotifier {
 
   // Play video
   Future<void> play() async {
-    if (_controller != null && _controller!.value.isReady) {
-      try {
-        _controller!.play();
-        _isPlaying = true;
-        notifyListeners();
-      } catch (e) {
-        print('Error playing video: $e');
-        _setError('Failed to play video');
+    if (_controller != null) {
+      if (_controller!.value.isReady) {
+        try {
+          _controller!.play();
+          _isPlaying = true;
+          notifyListeners();
+        } catch (e) {
+          print('❌ Error playing video: $e');
+          _setError('Failed to play video');
+        }
+      } else {
+        print('⏳ Controller not ready for play - waiting...');
+        // Try to wait for controller to be ready
+        await _waitForControllerReady();
+        if (_controller != null && _controller!.value.isReady) {
+          await play(); // Retry
+        } else {
+          print('❌ Controller still not ready after waiting');
+          _setError('Video player not ready. Please try again.');
+        }
       }
     } else {
-      print('Controller not ready for play');
+      print('❌ No controller available for play');
+      _setError('Video player not initialized');
     }
   }
 
   // Pause video
   Future<void> pause() async {
-    if (_controller != null && _controller!.value.isReady) {
-      try {
-        _controller!.pause();
-        _isPlaying = false;
-        notifyListeners();
-      } catch (e) {
-        print('Error pausing video: $e');
-        _setError('Failed to pause video');
+    if (_controller != null) {
+      if (_controller!.value.isReady) {
+        try {
+          _controller!.pause();
+          _isPlaying = false;
+          notifyListeners();
+        } catch (e) {
+          print('❌ Error pausing video: $e');
+          _setError('Failed to pause video');
+        }
+      } else {
+        print('⏳ Controller not ready for pause');
       }
     } else {
-      print('Controller not ready for pause');
+      print('❌ No controller available for pause');
     }
   }
 
@@ -295,6 +326,32 @@ class VideoProvider with ChangeNotifier {
   void _setError(String? error) {
     _error = error;
     notifyListeners();
+  }
+
+  void clearError() {
+    _error = null;
+    notifyListeners();
+  }
+
+  // Helper method to wait for controller to be ready
+  Future<void> _waitForControllerReady() async {
+    if (_controller == null) return;
+
+    int attempts = 0;
+    const maxAttempts = 15;
+    const delayMs = 200;
+
+    while (!_controller!.value.isReady && attempts < maxAttempts) {
+      await Future.delayed(const Duration(milliseconds: delayMs));
+      attempts++;
+      print('⏳ Waiting for controller readiness... (attempt $attempts/$maxAttempts)');
+    }
+
+    if (_controller!.value.isReady) {
+      print('✅ Controller is now ready');
+    } else {
+      print('❌ Controller failed to become ready after $maxAttempts attempts');
+    }
   }
 
   @override
