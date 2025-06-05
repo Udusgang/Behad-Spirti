@@ -175,38 +175,27 @@ class _SplashScreenState extends State<SplashScreen>
             
             // Main content
             Center(
-              child: SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: MediaQuery.of(context).size.height,
-                  ),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Animated logo/icon
-                        _buildAnimatedLogo(),
-
-                        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-
-                        // Animated title
-                        _buildAnimatedTitle(),
-
-                        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-
-                        // Animated subtitle
-                        _buildAnimatedSubtitle(),
-
-                        SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-
-                        // Loading indicator
-                        _buildLoadingIndicator(),
-
-                        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                      ],
-                    ),
-                  ),
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Animated logo/icon
+                  _buildAnimatedLogo(),
+                  
+                  const SizedBox(height: 40),
+                  
+                  // Animated title
+                  _buildAnimatedTitle(),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Animated subtitle
+                  _buildAnimatedSubtitle(),
+                  
+                  const SizedBox(height: 60),
+                  
+                  // Loading indicator
+                  _buildLoadingIndicator(),
+                ],
               ),
             ),
           ],

@@ -271,36 +271,4 @@ class AppTheme {
     fontWeight: FontWeight.w500,
     color: mediumGray,
   );
-
-  // Helper method to safely get Google Fonts with fallback
-  static TextStyle safeGoogleFont({
-    required String fontFamily,
-    required double fontSize,
-    required FontWeight fontWeight,
-    required Color color,
-  }) {
-    try {
-      if (fontFamily == 'playfair') {
-        return GoogleFonts.playfairDisplay(
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          color: color,
-        );
-      } else {
-        return GoogleFonts.inter(
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          color: color,
-        );
-      }
-    } catch (e) {
-      // Fallback to system fonts
-      return TextStyle(
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        color: color,
-        fontFamily: fontFamily == 'playfair' ? 'serif' : 'sans-serif',
-      );
-    }
-  }
 }

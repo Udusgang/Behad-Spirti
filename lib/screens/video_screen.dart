@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'dart:io';
 import '../providers/providers.dart';
 import '../models/models.dart';
 import '../theme/app_theme.dart';
@@ -24,42 +24,17 @@ class VideoScreen extends StatefulWidget {
 }
 
 class _VideoScreenState extends State<VideoScreen> {
-  late WebViewController _webViewController;
-  bool _isWebViewReady = false;
-
   @override
   void initState() {
     super.initState();
-    _initializeWebView();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<VideoProvider>().initializeVideo(widget.video);
     });
   }
 
-  void _initializeWebView() {
-    _webViewController = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageStarted: (String url) {
-            print('🌐 WebView started loading: $url');
-          },
-          onPageFinished: (String url) {
-            print('✅ WebView finished loading: $url');
-            setState(() {
-              _isWebViewReady = true;
-            });
-          },
-          onWebResourceError: (WebResourceError error) {
-            print('❌ WebView error: ${error.description}');
-          },
-        ),
-      );
-  }
-
   @override
   void dispose() {
-    context.read<VideoProvider>().resetVideo();
+    context.read<VideoProvider>().disposeController();
     super.dispose();
   }
 
@@ -69,12 +44,100 @@ class _VideoScreenState extends State<VideoScreen> {
       backgroundColor: Colors.black,
       body: Consumer<VideoProvider>(
         builder: (context, videoProvider, child) {
-          if (videoProvider.error != null) {
-            return _buildErrorState(videoProvider);
+          if (videoProvider.isLoading) {
+            return Container(
+              color: Colors.black,
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 3,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Loading video player...',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Please wait while we prepare your meditation',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
 
-          if (videoProvider.isLoading) {
-            return _buildLoadingState();
+          if (videoProvider.error != null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.white,
+                    size: 64,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    videoProvider.error!,
+                    style: const TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      videoProvider.initializeVideo(widget.video);
+                    },
+                    child: const Text('Retry'),
+                  ),
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    onPressed: () => _testConnectivity(),
+                    icon: const Icon(Icons.network_check),
+                    label: const Text('Test Internet'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (videoProvider.controller == null) {
+            return Container(
+              color: Colors.black,
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.play_circle_outline,
+                      color: Colors.white,
+                      size: 64,
+                    ),
+                    SizedBox(height: 16),
+                    CircularProgressIndicator(color: Colors.white),
+                    SizedBox(height: 16),
+                    Text(
+                      'Initializing player...',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
 
           return videoProvider.isFullScreen
@@ -85,136 +148,41 @@ class _VideoScreenState extends State<VideoScreen> {
     );
   }
 
-  Widget _buildErrorState(VideoProvider videoProvider) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error_outline,
-              color: Colors.white,
-              size: 64,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              videoProvider.error!,
-              style: const TextStyle(color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            _buildErrorActions(videoProvider),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildErrorActions(VideoProvider videoProvider) {
-    return Column(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton.icon(
-            onPressed: () => videoProvider.initializeVideo(widget.video),
-            icon: const Icon(Icons.refresh),
-            label: const Text('Retry'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.primaryPurple,
-              foregroundColor: Colors.white,
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: () => videoProvider.openInYouTubeApp(),
-                icon: const Icon(Icons.open_in_new),
-                label: const Text('YouTube App'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.red,
-                  side: const BorderSide(color: Colors.red),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: () => videoProvider.openInBrowser(),
-                icon: const Icon(Icons.web),
-                label: const Text('Browser'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  side: const BorderSide(color: Colors.white),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoadingState() {
-    return Container(
-      color: Colors.black,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.play_circle_outline,
-              color: Colors.white,
-              size: 64,
-            ),
-            const SizedBox(height: 16),
-            const CircularProgressIndicator(color: Colors.white),
-            const SizedBox(height: 16),
-            const Text(
-              'Loading video...',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              widget.video.title,
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 14,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildFullScreenPlayer(VideoProvider videoProvider) {
-    return Container(
-      color: Colors.black,
-      child: Stack(
-        children: [
-          _buildVideoPlayer(videoProvider),
-          Positioned(
-            top: 40,
-            left: 16,
-            child: IconButton(
-              icon: const Icon(Icons.fullscreen_exit, color: Colors.white),
-              onPressed: () {
-                videoProvider.exitFullScreen();
-                SystemChrome.setPreferredOrientations([
-                  DeviceOrientation.portraitUp,
-                ]);
-              },
-            ),
-          ),
+    return YoutubePlayerBuilder(
+      onExitFullScreen: () {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+        ]);
+        videoProvider.exitFullScreen();
+      },
+      player: YoutubePlayer(
+        controller: videoProvider.controller!,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: AppTheme.primaryPurple,
+        progressColors: ProgressBarColors(
+          playedColor: AppTheme.primaryPurple,
+          handleColor: AppTheme.primaryPurple,
+          backgroundColor: Colors.grey,
+          bufferedColor: Colors.grey.shade300,
+        ),
+        onReady: () {
+          print('✅ YouTube Player Ready (Fullscreen) - Video: ${widget.video.title}');
+        },
+        onEnded: (metaData) {
+          print('📹 Video Ended (Fullscreen): ${widget.video.title}');
+          _onVideoEnded();
+        },
+        bottomActions: [
+          CurrentPosition(),
+          const SizedBox(width: 10.0),
+          ProgressBar(isExpanded: true),
+          const SizedBox(width: 10.0),
+          RemainingDuration(),
+          FullScreenButton(),
         ],
       ),
+      builder: (context, player) => player,
     );
   }
 
@@ -235,212 +203,78 @@ class _VideoScreenState extends State<VideoScreen> {
     return Container(
       color: Colors.black,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           _buildAppBar(),
           AspectRatio(
             aspectRatio: AppConstants.videoPlayerAspectRatio,
-            child: _buildVideoPlayer(videoProvider),
+            child: YoutubePlayerBuilder(
+              onExitFullScreen: () {
+                SystemChrome.setPreferredOrientations([
+                  DeviceOrientation.portraitUp,
+                ]);
+                videoProvider.exitFullScreen();
+              },
+              player: YoutubePlayer(
+                controller: videoProvider.controller!,
+                showVideoProgressIndicator: true,
+                progressIndicatorColor: AppTheme.primaryPurple,
+                progressColors: ProgressBarColors(
+                  playedColor: AppTheme.primaryPurple,
+                  handleColor: AppTheme.primaryPurple,
+                  backgroundColor: Colors.grey.shade300,
+                  bufferedColor: Colors.grey.shade200,
+                ),
+                onReady: () {
+                  print('✅ YouTube Player Ready - Video: ${widget.video.title}');
+                  print('📺 Video ID: ${widget.video.youtubeId}');
+                },
+                onEnded: (metaData) {
+                  print('📹 Video Ended: ${widget.video.title}');
+                  _onVideoEnded();
+                },
+                bottomActions: [
+                  CurrentPosition(),
+                  const SizedBox(width: 8.0),
+                  ProgressBar(
+                    isExpanded: true,
+                    colors: ProgressBarColors(
+                      playedColor: AppTheme.primaryPurple,
+                      handleColor: AppTheme.primaryPurple,
+                      backgroundColor: Colors.grey.shade300,
+                      bufferedColor: Colors.grey.shade200,
+                    ),
+                  ),
+                  const SizedBox(width: 8.0),
+                  RemainingDuration(),
+                  const SizedBox(width: 4.0),
+                  FullScreenButton(),
+                ],
+              ),
+              builder: (context, player) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: player,
+                  ),
+                );
+              },
+            ),
           ),
           _buildPlayerControls(videoProvider),
         ],
       ),
     );
-  }
-
-  Widget _buildVideoPlayer(VideoProvider videoProvider) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Stack(
-          children: [
-            // YouTube thumbnail as background
-            if (widget.video.youtubeThumbnailUrl.isNotEmpty)
-              Image.network(
-                widget.video.youtubeThumbnailUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: Colors.grey.shade800,
-                  child: const Icon(
-                    Icons.video_library,
-                    color: Colors.white54,
-                    size: 64,
-                  ),
-                ),
-              ),
-            // Play overlay
-            Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.7),
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
-                    size: 48,
-                  ),
-                  onPressed: () => _showVideoOptions(videoProvider),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showVideoOptions(VideoProvider videoProvider) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Watch Video',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              widget.video.title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey.shade600,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 24),
-            _buildVideoOptionButton(
-              icon: Icons.play_circle_filled,
-              title: 'Open in YouTube App',
-              subtitle: 'Best experience with full controls',
-              color: Colors.red,
-              onTap: () {
-                Navigator.pop(context);
-                videoProvider.openInYouTubeApp();
-              },
-            ),
-            const SizedBox(height: 12),
-            _buildVideoOptionButton(
-              icon: Icons.web,
-              title: 'Open in Browser',
-              subtitle: 'Watch in your default browser',
-              color: Colors.blue,
-              onTap: () {
-                Navigator.pop(context);
-                videoProvider.openInBrowser();
-              },
-            ),
-            const SizedBox(height: 12),
-            _buildVideoOptionButton(
-              icon: Icons.link,
-              title: 'Copy Link',
-              subtitle: 'Share or save the video URL',
-              color: Colors.green,
-              onTap: () {
-                Navigator.pop(context);
-                _copyVideoLink();
-              },
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildVideoOptionButton({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade200),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(icon, color: color, size: 24),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey.shade400,
-              size: 16,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _copyVideoLink() {
-    Clipboard.setData(ClipboardData(text: widget.video.youtubeUrl));
-    AppHelpers.showSuccessSnackBar(context, 'Video link copied to clipboard!');
   }
 
   Widget _buildAppBar() {
@@ -485,7 +319,7 @@ class _VideoScreenState extends State<VideoScreen> {
 
   Widget _buildPlayerControls(VideoProvider videoProvider) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -516,7 +350,7 @@ class _VideoScreenState extends State<VideoScreen> {
 
           const SizedBox(width: 8),
 
-          // Play Button (opens options)
+          // Play/Pause Button
           Container(
             decoration: BoxDecoration(
               color: AppTheme.primaryPurple.withOpacity(0.9),
@@ -530,13 +364,15 @@ class _VideoScreenState extends State<VideoScreen> {
               ],
             ),
             child: IconButton(
-              icon: const Icon(
-                Icons.play_arrow,
+              icon: Icon(
+                videoProvider.isPlaying ? Icons.pause : Icons.play_arrow,
                 color: Colors.white,
                 size: 28,
               ),
-              onPressed: () => _showVideoOptions(videoProvider),
-              tooltip: 'Play Video',
+              onPressed: () async {
+                await videoProvider.togglePlayPause();
+              },
+              tooltip: videoProvider.isPlaying ? 'Pause' : 'Play',
             ),
           ),
 
@@ -560,7 +396,7 @@ class _VideoScreenState extends State<VideoScreen> {
 
           const Spacer(),
 
-          // Video Duration Info
+          // Video Progress Info
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
@@ -577,7 +413,7 @@ class _VideoScreenState extends State<VideoScreen> {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  widget.video.formattedDuration,
+                  videoProvider.formattedProgress,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -606,12 +442,12 @@ class _VideoScreenState extends State<VideoScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Handle bar
+            // Handle bar for visual indication
             Center(
               child: Container(
                 width: 40,
                 height: 4,
-                margin: const EdgeInsets.only(bottom: 16),
+                margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(2),
@@ -619,13 +455,13 @@ class _VideoScreenState extends State<VideoScreen> {
               ),
             ),
             _buildVideoInfo(),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             _buildActionButtons(),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             _buildVideoDescription(),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             _buildNextVideoSection(),
-            const SizedBox(height: 16),
+            const SizedBox(height: 40), // Extra bottom padding
           ],
         ),
       ),
@@ -636,6 +472,7 @@ class _VideoScreenState extends State<VideoScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Video Title with enhanced styling
         Text(
           widget.video.title,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -645,8 +482,11 @@ class _VideoScreenState extends State<VideoScreen> {
           ),
         ),
         const SizedBox(height: 12),
+
+        // Video metadata row
         Row(
           children: [
+            // Duration chip
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
@@ -676,7 +516,10 @@ class _VideoScreenState extends State<VideoScreen> {
                 ],
               ),
             ),
+
             const SizedBox(width: 12),
+
+            // Completion status
             Consumer<ProgressProvider>(
               builder: (context, progressProvider, child) {
                 final isCompleted = progressProvider.isVideoCompleted(widget.video.id);
@@ -704,7 +547,7 @@ class _VideoScreenState extends State<VideoScreen> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        isCompleted ? 'Completed' : 'Ready to Watch',
+                        isCompleted ? 'Completed' : 'In Progress',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: isCompleted ? Colors.green : Colors.orange,
                           fontWeight: FontWeight.w600,
@@ -717,6 +560,8 @@ class _VideoScreenState extends State<VideoScreen> {
             ),
           ],
         ),
+
+        // Video position in course
         const SizedBox(height: 8),
         Text(
           'Video ${widget.courseVideos.indexWhere((v) => v.id == widget.video.id) + 1} of ${widget.courseVideos.length}',
@@ -733,6 +578,7 @@ class _VideoScreenState extends State<VideoScreen> {
     return Consumer<ProgressProvider>(
       builder: (context, progressProvider, child) {
         final isCompleted = progressProvider.isVideoCompleted(widget.video.id);
+
         return Column(
           children: [
             Row(
@@ -751,15 +597,11 @@ class _VideoScreenState extends State<VideoScreen> {
                           widget.video.id,
                           widget.video.courseId,
                         );
-                        AppHelpers.showSuccessSnackBar(context, 'Video marked as completed! 🎉');
+                        AppHelpers.showSuccessSnackBar(context, AppConstants.videoCompletedMessage);
                       }
                     },
                     icon: Icon(isCompleted ? Icons.replay : Icons.check),
                     label: Text(isCompleted ? 'Mark as Not Completed' : 'Mark as Completed'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryPurple,
-                      foregroundColor: Colors.white,
-                    ),
                   ),
                 ),
               ],
@@ -769,9 +611,9 @@ class _VideoScreenState extends State<VideoScreen> {
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () => context.read<VideoProvider>().openInYouTubeApp(),
+                    onPressed: () => _openInYouTube(),
                     icon: const Icon(Icons.open_in_new),
-                    label: const Text('YouTube App'),
+                    label: const Text('Open in YouTube'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.red,
                       side: const BorderSide(color: Colors.red),
@@ -781,13 +623,9 @@ class _VideoScreenState extends State<VideoScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () => _copyVideoLink(),
+                    onPressed: () => _shareVideo(),
                     icon: const Icon(Icons.share),
-                    label: const Text('Copy Link'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppTheme.primaryPurple,
-                      side: BorderSide(color: AppTheme.primaryPurple),
-                    ),
+                    label: const Text('Share Video'),
                   ),
                 ),
               ],
@@ -914,6 +752,298 @@ class _VideoScreenState extends State<VideoScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  void _onVideoEnded() {
+    print('🎯 Video completed: ${widget.video.title}');
+
+    // Mark video as completed when it ends
+    context.read<ProgressProvider>().markVideoCompleted(
+      widget.video.id,
+      widget.video.courseId,
+    );
+
+    // Show completion message with enhanced styling
+    AppHelpers.showSuccessSnackBar(
+      context,
+      '🎉 ${AppConstants.videoCompletedMessage}',
+    );
+
+    // Auto-play next video if available
+    final videoProvider = context.read<VideoProvider>();
+    if (videoProvider.hasNextVideo(widget.courseVideos)) {
+      // Show next video dialog
+      _showNextVideoDialog();
+    } else {
+      // Show course completion dialog
+      _showCourseCompletionDialog();
+    }
+  }
+
+  void _showNextVideoDialog() {
+    final currentIndex = widget.courseVideos.indexWhere((v) => v.id == widget.video.id);
+    final nextVideo = widget.courseVideos[currentIndex + 1];
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Row(
+          children: [
+            Icon(Icons.play_arrow, color: AppTheme.primaryPurple),
+            SizedBox(width: 8),
+            Text('Next Video'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Up next: ${nextVideo.title}'),
+            const SizedBox(height: 8),
+            Text(
+              'Duration: ${nextVideo.formattedDuration}',
+              style: const TextStyle(color: AppTheme.mediumGray),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Stay Here'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              context.read<VideoProvider>().loadNextVideo(widget.courseVideos);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryPurple,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Play Next'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showCourseCompletionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Row(
+          children: [
+            Icon(Icons.celebration, color: Colors.amber),
+            SizedBox(width: 8),
+            Text('Course Completed!'),
+          ],
+        ),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('🎉 Congratulations!'),
+            SizedBox(height: 8),
+            Text('You have completed all videos in this course.'),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context); // Return to course list
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryPurple,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Back to Courses'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openInYouTube() {
+    // For now, just show the YouTube URL in a dialog
+    // In a real app, you would use url_launcher package to open the URL
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('YouTube Link'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Video URL:'),
+            const SizedBox(height: 8),
+            SelectableText(
+              widget.video.youtubeUrl,
+              style: const TextStyle(
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text('Copy this URL to open in YouTube app or browser.'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _shareVideo() {
+    // For now, just show the share dialog with video info
+    // In a real app, you would use share_plus package
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Share Video'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.video.title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(widget.video.description),
+            const SizedBox(height: 16),
+            const Text('YouTube URL:'),
+            const SizedBox(height: 4),
+            SelectableText(
+              widget.video.youtubeUrl,
+              style: const TextStyle(
+                color: Colors.blue,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _testConnectivity() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const AlertDialog(
+        content: Row(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(width: 16),
+            Text('Testing connectivity...'),
+          ],
+        ),
+      ),
+    );
+
+    try {
+      // Test basic internet connectivity
+      final result = await InternetAddress.lookup('google.com');
+      Navigator.pop(context); // Close loading dialog
+
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        // Test YouTube specifically
+        try {
+          final youtubeResult = await InternetAddress.lookup('youtube.com');
+          if (youtubeResult.isNotEmpty) {
+            _showConnectivityResult(
+              'Internet Connection: ✅ Good\n'
+              'YouTube Access: ✅ Available\n'
+              'Video ID: ${widget.video.youtubeId}\n'
+              'URL: ${widget.video.youtubeUrl}',
+              true,
+            );
+          }
+        } catch (e) {
+          _showConnectivityResult(
+            'Internet Connection: ✅ Good\n'
+            'YouTube Access: ❌ Blocked\n'
+            'Error: YouTube may be blocked in your network',
+            false,
+          );
+        }
+      }
+    } catch (e) {
+      Navigator.pop(context); // Close loading dialog
+      _showConnectivityResult(
+        'Internet Connection: ❌ Failed\n'
+        'Error: No internet connection\n'
+        'Please check your network settings',
+        false,
+      );
+    }
+  }
+
+  void _showConnectivityResult(String message, bool isSuccess) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(
+              isSuccess ? Icons.check_circle : Icons.error,
+              color: isSuccess ? Colors.green : Colors.red,
+            ),
+            const SizedBox(width: 8),
+            Text(isSuccess ? 'Connectivity Test' : 'Connection Issue'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(message),
+            if (!isSuccess) ...[
+              const SizedBox(height: 16),
+              const Text(
+                'Troubleshooting Steps:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                '1. Check WiFi/Mobile data\n'
+                '2. Restart emulator with:\n'
+                '   emulator -dns-server 8.8.8.8\n'
+                '3. Try on physical device\n'
+                '4. Cold boot emulator',
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
+          ],
+        ),
+        actions: [
+          if (!isSuccess)
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                context.read<VideoProvider>().initializeVideo(widget.video);
+              },
+              child: const Text('Retry Video'),
+            ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
     );
   }
 }

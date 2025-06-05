@@ -1,120 +1,183 @@
 import 'package:flutter/foundation.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../models/models.dart';
 
 class VideoProvider with ChangeNotifier {
+  YoutubePlayerController? _controller;
   Video? _currentVideo;
   bool _isPlaying = false;
   bool _isFullScreen = false;
+  Duration _currentPosition = Duration.zero;
+  Duration _totalDuration = Duration.zero;
   bool _isLoading = false;
   String? _error;
-  String _viewMode = 'embedded'; // 'embedded', 'external', 'youtube_app'
 
   // Getters
+  YoutubePlayerController? get controller => _controller;
   Video? get currentVideo => _currentVideo;
   bool get isPlaying => _isPlaying;
   bool get isFullScreen => _isFullScreen;
+  Duration get currentPosition => _currentPosition;
+  Duration get totalDuration => _totalDuration;
   bool get isLoading => _isLoading;
   String? get error => _error;
-  String get viewMode => _viewMode;
 
-  // Get formatted progress (simplified since we don't track actual playback)
-  String get formattedProgress {
-    if (_currentVideo == null) return '0:00 / 0:00';
-    return '0:00 / ${_currentVideo!.formattedDuration}';
-  }
-
-  // Initialize video (simplified - just set current video)
+  // Initialize video player
   Future<void> initializeVideo(Video video) async {
     _setLoading(true);
     try {
-      _currentVideo = video;
-      print('🎬 Setting current video: ${video.title}');
-      print('📺 YouTube ID: ${video.youtubeId}');
-      print('🔗 YouTube URL: ${video.youtubeUrl}');
+      // Dispose previous controller if exists
+      await disposeController();
 
-      // Simulate brief loading
+      _currentVideo = video;
+      print('🎬 Initializing video: ${video.title}');
+      print('📺 YouTube ID: ${video.youtubeId}');
+
+      _controller = YoutubePlayerController(
+        initialVideoId: video.youtubeId,
+        flags: const YoutubePlayerFlags(
+          autoPlay: false,
+          mute: false,
+          enableCaption: false, // Disable captions to reduce loading issues
+          forceHD: false,
+          loop: false,
+          isLive: false,
+          controlsVisibleAtStart: true,
+          hideControls: false,
+          hideThumbnail: false,
+          disableDragSeek: false,
+        ),
+      );
+
+      // Add listeners
+      _controller!.addListener(_onPlayerStateChanged);
+
+      // Wait a moment for controller to initialize
       await Future.delayed(const Duration(milliseconds: 300));
 
+      print('✅ YouTube controller initialized');
       _error = null;
-      print('✅ Video ready for viewing');
     } catch (e) {
-      print('❌ Error setting video: $e');
-      _error = 'Failed to load video: $e';
+      print('❌ Error initializing video: $e');
+      _error = 'Failed to initialize video: $e';
     } finally {
       _setLoading(false);
     }
   }
 
-  // Set view mode for video playback
-  void setViewMode(String mode) {
-    _viewMode = mode;
-    print('📺 View mode set to: $mode');
-    notifyListeners();
-  }
-
-  // Open video in YouTube app
-  Future<void> openInYouTubeApp() async {
-    if (_currentVideo == null) return;
+  // Player state change listener
+  void _onPlayerStateChanged() {
+    if (_controller == null) return;
 
     try {
-      final youtubeAppUrl = 'youtube://watch?v=${_currentVideo!.youtubeId}';
-      final webUrl = _currentVideo!.youtubeUrl;
+      // Check if controller is ready before accessing values
+      if (_controller!.value.isReady) {
+        final playerState = _controller!.value.playerState;
+        final position = _controller!.value.position;
+        final duration = _controller!.value.metaData.duration;
 
-      // Try to open in YouTube app first
-      if (await canLaunchUrl(Uri.parse(youtubeAppUrl))) {
-        await launchUrl(Uri.parse(youtubeAppUrl));
-        print('✅ Opened in YouTube app');
+        _isPlaying = playerState == PlayerState.playing;
+        _currentPosition = position;
+        _totalDuration = duration;
+
+        // Clear any previous errors when controller is working
+        if (_error != null) {
+          _error = null;
+        }
+
+        print('🎵 Player state: ${playerState.toString()}, Position: ${position.inSeconds}s');
       } else {
-        // Fallback to web browser
-        await launchUrl(
-          Uri.parse(webUrl),
-          mode: LaunchMode.externalApplication,
-        );
-        print('✅ Opened in web browser');
+        print('⏳ Controller not ready in state change listener');
       }
     } catch (e) {
-      print('❌ Error opening video: $e');
-      _setError('Failed to open video: $e');
+      print('❌ Error in player state change: $e');
+      // Don't set error here as it might be temporary
     }
-  }
 
-  // Open video in web browser
-  Future<void> openInBrowser() async {
-    if (_currentVideo == null) return;
-
-    try {
-      await launchUrl(
-        Uri.parse(_currentVideo!.youtubeUrl),
-        mode: LaunchMode.externalApplication,
-      );
-      print('✅ Opened video in browser');
-    } catch (e) {
-      print('❌ Error opening video in browser: $e');
-      _setError('Failed to open video in browser: $e');
-    }
-  }
-
-  // Simulate play (for UI state)
-  void simulatePlay() {
-    _isPlaying = true;
-    print('▶️ Simulating play state');
     notifyListeners();
   }
 
-  // Simulate pause (for UI state)
-  void simulatePause() {
-    _isPlaying = false;
-    print('⏸️ Simulating pause state');
-    notifyListeners();
-  }
-
-  // Toggle play/pause simulation
-  void togglePlayPause() {
-    if (_isPlaying) {
-      simulatePause();
+  // Play video
+  Future<void> play() async {
+    if (_controller != null && _controller!.value.isReady) {
+      try {
+        _controller!.play();
+        _isPlaying = true;
+        notifyListeners();
+      } catch (e) {
+        print('Error playing video: $e');
+        _setError('Failed to play video');
+      }
     } else {
-      simulatePlay();
+      print('Controller not ready for play');
+    }
+  }
+
+  // Pause video
+  Future<void> pause() async {
+    if (_controller != null && _controller!.value.isReady) {
+      try {
+        _controller!.pause();
+        _isPlaying = false;
+        notifyListeners();
+      } catch (e) {
+        print('Error pausing video: $e');
+        _setError('Failed to pause video');
+      }
+    } else {
+      print('Controller not ready for pause');
+    }
+  }
+
+  // Seek to position
+  Future<void> seekTo(Duration position) async {
+    if (_controller != null && _controller!.value.isReady) {
+      try {
+        _controller!.seekTo(position);
+      } catch (e) {
+        print('Error seeking video: $e');
+      }
+    } else {
+      print('Controller not ready for seeking');
+    }
+  }
+
+  // Toggle play/pause
+  Future<void> togglePlayPause() async {
+    if (_isPlaying) {
+      await pause();
+    } else {
+      await play();
+    }
+  }
+
+  // Set volume
+  Future<void> setVolume(int volume) async {
+    if (_controller != null && _controller!.value.isReady) {
+      try {
+        _controller!.setVolume(volume);
+      } catch (e) {
+        print('Error setting volume: $e');
+      }
+    } else {
+      print('Controller not ready for volume control');
+    }
+  }
+
+  // Toggle mute
+  Future<void> toggleMute() async {
+    if (_controller != null && _controller!.value.isReady) {
+      try {
+        if (_controller!.value.volume > 0) {
+          _controller!.setVolume(0);
+        } else {
+          _controller!.setVolume(100);
+        }
+      } catch (e) {
+        print('Error toggling mute: $e');
+      }
+    } else {
+      print('Controller not ready for mute control');
     }
   }
 
@@ -139,11 +202,38 @@ class VideoProvider with ChangeNotifier {
     }
   }
 
-  // Get video embed URL for WebView
-  String get embedUrl {
-    if (_currentVideo == null) return '';
-    return 'https://www.youtube.com/embed/${_currentVideo!.youtubeId}?autoplay=0&controls=1&rel=0&showinfo=0&modestbranding=1';
+  // Get current playback position in seconds
+  int get currentPositionSeconds => _currentPosition.inSeconds;
+
+  // Get total duration in seconds
+  int get totalDurationSeconds => _totalDuration.inSeconds;
+
+  // Get progress percentage
+  double get progressPercentage {
+    if (_totalDuration.inSeconds == 0) return 0.0;
+    return (_currentPosition.inSeconds / _totalDuration.inSeconds).clamp(0.0, 1.0);
   }
+
+  // Check if video is near completion (90% watched)
+  bool get isNearCompletion {
+    return progressPercentage >= 0.9;
+  }
+
+  // Format duration to string
+  String formatDuration(Duration duration) {
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+
+  // Get formatted current position
+  String get formattedCurrentPosition => formatDuration(_currentPosition);
+
+  // Get formatted total duration
+  String get formattedTotalDuration => formatDuration(_totalDuration);
+
+  // Get formatted progress (e.g., "5:30 / 10:45")
+  String get formattedProgress => '$formattedCurrentPosition / $formattedTotalDuration';
 
   // Load next video in course
   Future<void> loadNextVideo(List<Video> courseVideos) async {
@@ -181,12 +271,18 @@ class VideoProvider with ChangeNotifier {
     return currentIndex > 0;
   }
 
-  // Reset video state
-  void resetVideo() {
+  // Dispose controller
+  Future<void> disposeController() async {
+    if (_controller != null) {
+      _controller!.removeListener(_onPlayerStateChanged);
+      _controller!.dispose();
+      _controller = null;
+    }
     _currentVideo = null;
     _isPlaying = false;
     _isFullScreen = false;
-    _error = null;
+    _currentPosition = Duration.zero;
+    _totalDuration = Duration.zero;
     notifyListeners();
   }
 
@@ -201,14 +297,9 @@ class VideoProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void clearError() {
-    _error = null;
-    notifyListeners();
-  }
-
   @override
   void dispose() {
-    resetVideo();
+    disposeController();
     super.dispose();
   }
 }

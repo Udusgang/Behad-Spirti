@@ -38,9 +38,8 @@ dependencies:
   # State Management
   provider: ^6.1.2
 
-  # Video & Web Integration
-  webview_flutter: ^4.4.2
-  url_launcher: ^6.2.2
+  # YouTube Integration
+  youtube_player_flutter: ^9.0.3
 
   # Network & Image Handling
   http: ^1.2.1
