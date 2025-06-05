@@ -202,87 +202,28 @@ class StaticData {
       tags: ['evening', 'sleep', 'relaxation'],
     ),
 
-    // Advanced Techniques Course
+    // Advanced Spiritual Practices
     Video(
-      id: 'video_9',
-      youtubeId: 'SEfs5TJZ6Nk', // Advanced breathing
-      title: 'Advanced Breathing Techniques',
-      description: 'Master powerful breathing techniques for deeper meditation and spiritual connection.',
-      thumbnailUrl: 'https://img.youtube.com/vi/SEfs5TJZ6Nk/maxresdefault.jpg',
-      courseId: 'course_4',
-      duration: 1800, // 30 minutes
+      id: 'video_4',
+      youtubeId: 'Jyy0ra2WcQQ', // Real chakra meditation
+      title: 'Chakra Meditation & Energy Healing',
+      description: 'Explore the seven chakras and learn powerful energy healing techniques for spiritual growth.',
+      thumbnailUrl: 'https://img.youtube.com/vi/Jyy0ra2WcQQ/maxresdefault.jpg',
+      courseId: 'course_2',
+      duration: 2700, // 45 minutes
       orderIndex: 1,
-      tags: ['breathing', 'advanced', 'techniques'],
+      tags: ['chakra', 'energy', 'healing'],
     ),
     Video(
-      id: 'video_10',
-      youtubeId: 'ZToicYcHIOU', // Concentration meditation
-      title: 'Concentration Meditation',
-      description: 'Develop laser-sharp focus and concentration through advanced meditation practices.',
-      thumbnailUrl: 'https://img.youtube.com/vi/ZToicYcHIOU/maxresdefault.jpg',
-      courseId: 'course_4',
+      id: 'video_5',
+      youtubeId: 'StrbppmsZJw', // Real manifestation video
+      title: 'Manifestation & Law of Attraction',
+      description: 'Learn the ancient art of manifestation and how to align with the law of attraction for spiritual abundance.',
+      thumbnailUrl: 'https://img.youtube.com/vi/StrbppmsZJw/maxresdefault.jpg',
+      courseId: 'course_2',
       duration: 2100, // 35 minutes
       orderIndex: 2,
-      tags: ['concentration', 'focus', 'advanced'],
-    ),
-
-    // Ancient Knowledge Course
-    Video(
-      id: 'video_11',
-      youtubeId: 'StrbppmsZJw', // Ancient wisdom
-      title: 'Ancient Wisdom Teachings',
-      description: 'Discover timeless wisdom from ancient civilizations and sacred traditions.',
-      thumbnailUrl: 'https://img.youtube.com/vi/StrbppmsZJw/maxresdefault.jpg',
-      courseId: 'course_5',
-      duration: 3000, // 50 minutes
-      orderIndex: 1,
-      tags: ['ancient', 'wisdom', 'teachings'],
-    ),
-    Video(
-      id: 'video_12',
-      youtubeId: 'Jyy0ra2WcQQ', // Sacred practices
-      title: 'Sacred Practices & Rituals',
-      description: 'Learn about sacred practices and rituals from various spiritual traditions.',
-      thumbnailUrl: 'https://img.youtube.com/vi/Jyy0ra2WcQQ/maxresdefault.jpg',
-      courseId: 'course_5',
-      duration: 2700, // 45 minutes
-      orderIndex: 2,
-      tags: ['sacred', 'rituals', 'practices'],
-    ),
-    Video(
-      id: 'video_13',
-      youtubeId: '1ZYbU82GVz4', // Mystical traditions
-      title: 'Mystical Traditions',
-      description: 'Explore mystical traditions and their profound teachings for modern seekers.',
-      thumbnailUrl: 'https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg',
-      courseId: 'course_5',
-      duration: 2400, // 40 minutes
-      orderIndex: 3,
-      tags: ['mystical', 'traditions', 'seekers'],
-    ),
-
-    // Consciousness Course
-    Video(
-      id: 'video_14',
-      youtubeId: 'StrbppmsZJw', // Consciousness exploration
-      title: 'Understanding Consciousness',
-      description: 'Deep dive into the nature of consciousness and awareness.',
-      thumbnailUrl: 'https://img.youtube.com/vi/StrbppmsZJw/maxresdefault.jpg',
-      courseId: 'course_6',
-      duration: 3600, // 60 minutes
-      orderIndex: 1,
-      tags: ['consciousness', 'awareness', 'nature'],
-    ),
-    Video(
-      id: 'video_15',
-      youtubeId: 'ZToicYcHIOU', // Reality exploration
-      title: 'The Nature of Reality',
-      description: 'Explore philosophical and spiritual perspectives on the nature of reality.',
-      thumbnailUrl: 'https://img.youtube.com/vi/ZToicYcHIOU/maxresdefault.jpg',
-      courseId: 'course_6',
-      duration: 2400, // 40 minutes
-      orderIndex: 2,
-      tags: ['reality', 'philosophy', 'spiritual'],
+      tags: ['manifestation', 'law of attraction', 'abundance'],
     ),
   ];
 

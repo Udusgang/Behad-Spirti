@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 
 class IconTestScreen extends StatelessWidget {
   const IconTestScreen({super.key});
@@ -44,47 +43,23 @@ class IconTestScreen extends StatelessWidget {
             ),
             
             const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Icons test completed'),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
-                    },
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.check_circle),
-                        SizedBox(width: 8),
-                        Text('Test Icons'),
-                      ],
-                    ),
+            ElevatedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Icons test completed'),
+                    duration: Duration(seconds: 2),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _testInternetConnection(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.wifi),
-                        SizedBox(width: 8),
-                        Text('Test Internet'),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+                );
+              },
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.check_circle),
+                  SizedBox(width: 8),
+                  Text('Test Button'),
+                ],
+              ),
             ),
           ],
         ),
@@ -108,89 +83,6 @@ class IconTestScreen extends StatelessWidget {
           Text(
             'Code: ${icon.codePoint.toRadixString(16)}',
             style: const TextStyle(fontSize: 12, color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _testInternetConnection(BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const AlertDialog(
-        content: Row(
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(width: 16),
-            Text('Testing internet connection...'),
-          ],
-        ),
-      ),
-    );
-
-    try {
-      // Test basic connectivity
-      final result = await InternetAddress.lookup('google.com');
-      Navigator.pop(context); // Close loading dialog
-
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        // Test YouTube specifically
-        try {
-          final youtubeResult = await InternetAddress.lookup('youtube.com');
-          if (youtubeResult.isNotEmpty) {
-            _showConnectionResult(
-              context,
-              '✅ Internet Connection: SUCCESS\n'
-              '✅ Google Access: Available\n'
-              '✅ YouTube Access: Available\n'
-              '🎬 Ready for video streaming!',
-              true,
-            );
-          }
-        } catch (e) {
-          _showConnectionResult(
-            context,
-            '✅ Internet Connection: SUCCESS\n'
-            '✅ Google Access: Available\n'
-            '❌ YouTube Access: BLOCKED\n'
-            '⚠️ YouTube may be restricted',
-            false,
-          );
-        }
-      }
-    } catch (e) {
-      Navigator.pop(context); // Close loading dialog
-      _showConnectionResult(
-        context,
-        '❌ Internet Connection: FAILED\n'
-        '❌ No network access detected\n'
-        '📱 Check your WiFi/Mobile data\n'
-        '🔧 Verify app permissions',
-        false,
-      );
-    }
-  }
-
-  void _showConnectionResult(BuildContext context, String message, bool isSuccess) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            Icon(
-              isSuccess ? Icons.check_circle : Icons.error,
-              color: isSuccess ? Colors.green : Colors.red,
-            ),
-            const SizedBox(width: 8),
-            Text(isSuccess ? 'Connection Test' : 'Connection Issue'),
-          ],
-        ),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
           ),
         ],
       ),

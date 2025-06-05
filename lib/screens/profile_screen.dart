@@ -5,6 +5,7 @@ import '../theme/app_theme.dart';
 import '../utils/constants.dart';
 import '../utils/helpers.dart';
 import '../data/static_data.dart';
+import '../debug/icon_test_screen.dart';
 import 'dart:math' as math;
 
 class ProfileScreen extends StatelessWidget {
@@ -40,6 +41,8 @@ class ProfileScreen extends StatelessWidget {
             _buildAchievements(context),
             const SizedBox(height: 24),
             _buildPreferences(context),
+            const SizedBox(height: 24),
+            _buildDebugSection(context),
             const SizedBox(height: 24),
             _buildAboutApp(context),
           ],
@@ -445,6 +448,58 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildDebugSection(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppConstants.defaultPadding),
+      decoration: AppTheme.cardDecoration.copyWith(
+        color: Colors.orange.withOpacity(0.1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.bug_report,
+                color: Colors.orange,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Debug Tools',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Colors.orange.shade700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Test app functionality and troubleshoot issues',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const IconTestScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.visibility),
+            label: const Text('Test Icons'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildAboutApp(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -453,7 +508,7 @@ class ProfileScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'About Almighty Authority',
+            'About Spirit',
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 12),

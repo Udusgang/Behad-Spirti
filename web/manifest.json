@@ -1,11 +1,11 @@
 {
-    "name": "Almighty Authority",
-    "short_name": "Almighty Authority",
+    "name": "myapp",
+    "short_name": "myapp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A powerful spiritual learning platform for divine wisdom and enlightenment.",
+    "description": "A new Flutter project.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

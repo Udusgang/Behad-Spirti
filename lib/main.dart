@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'providers/providers.dart';
 import 'theme/app_theme.dart';
 import 'utils/constants.dart';
-import 'screens/simple_splash_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
   // Set system UI overlay style
@@ -17,11 +17,11 @@ void main() {
     ),
   );
 
-  runApp(const AlmightyAuthorityApp());
+  runApp(const SpiritApp());
 }
 
-class AlmightyAuthorityApp extends StatelessWidget {
-  const AlmightyAuthorityApp({super.key});
+class SpiritApp extends StatelessWidget {
+  const SpiritApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class AlmightyAuthorityApp extends StatelessWidget {
             color: Colors.black87,
           ),
         ),
-        home: const SimpleSplashScreen(),
+        home: const SplashScreen(),
       ),
     );
   }

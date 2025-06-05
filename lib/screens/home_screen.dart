@@ -8,7 +8,6 @@ import '../utils/helpers.dart';
 import '../widgets/category_card.dart';
 import '../widgets/course_card.dart';
 import '../widgets/featured_section.dart';
-import '../widgets/almighty_logo.dart';
 import 'course_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -118,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             colors: [Colors.white, Color(0xFFF8FAFC)],
                           ).createShader(bounds),
                           child: const Text(
-                            'Almighty Authority',
+                            'Spirit',
                             style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
@@ -131,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Unlock divine wisdom and spiritual authority',
+                      'Discover your spiritual journey',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white.withOpacity(0.9),

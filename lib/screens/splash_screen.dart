@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import '../theme/app_theme.dart';
 import '../utils/constants.dart';
-import '../widgets/almighty_logo.dart';
 import 'onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -225,10 +224,37 @@ class _SplashScreenState extends State<SplashScreen>
           opacity: _fadeAnimation,
           child: Transform.scale(
             scale: _scaleAnimation.value,
-            child: const AlmightyLogo(
-              size: 140,
-              showText: false,
-              animated: false, // We'll handle animation here
+            child: Transform.rotate(
+              angle: _rotationAnimation.value * 0.1, // Subtle rotation
+              child: Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF6B46C1),
+                      Color(0xFF7C3AED),
+                      Color(0xFF8B5CF6),
+                      Color(0xFFA855F7),
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF6B46C1).withOpacity(0.4),
+                      blurRadius: 30,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.self_improvement,
+                  size: 60,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         );
@@ -253,10 +279,10 @@ class _SplashScreenState extends State<SplashScreen>
                 ],
               ).createShader(bounds),
               child: Text(
-                'ALMIGHTY\nAUTHORITY',
+                'Spirit',
                 style: TextStyle(
-                  fontSize: 36 + (_particleAnimation.value * 4), // Subtle size animation
-                  fontWeight: FontWeight.w900,
+                  fontSize: 48 + (_particleAnimation.value * 4), // Subtle size animation
+                  fontWeight: FontWeight.bold,
                   color: Colors.white,
                   letterSpacing: 2.0 + (_particleAnimation.value * 0.5),
                   shadows: [
@@ -286,7 +312,7 @@ class _SplashScreenState extends State<SplashScreen>
       child: FadeTransition(
         opacity: _textFadeAnimation,
         child: const Text(
-          'Divine Wisdom • Spiritual Authority • Sacred Knowledge',
+          'Discover Your Spiritual Journey',
           style: TextStyle(
             fontSize: 18,
             color: Color(0xFFE2E8F0),
@@ -316,7 +342,7 @@ class _SplashScreenState extends State<SplashScreen>
           ),
           const SizedBox(height: 16),
           Text(
-            'Connecting to divine wisdom...',
+            'Loading your spiritual experience...',
             style: TextStyle(
               fontSize: 14,
               color: Colors.white.withOpacity(0.7),
