@@ -43,7 +43,7 @@ class _SimpleSplashScreenState extends State<SimpleSplashScreen> {
             ],
           ),
         ),
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -51,7 +51,7 @@ class _SimpleSplashScreenState extends State<SimpleSplashScreen> {
               Container(
                 width: 120,
                 height: 120,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
@@ -61,17 +61,17 @@ class _SimpleSplashScreenState extends State<SimpleSplashScreen> {
                     ],
                   ),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.auto_awesome,
                   size: 60,
                   color: Colors.white,
                 ),
               ),
-              
-              SizedBox(height: 40),
-              
+
+              const SizedBox(height: 40),
+
               // App name
-              Text(
+              const Text(
                 'ALMIGHTY',
                 style: TextStyle(
                   fontSize: 42,
@@ -80,7 +80,7 @@ class _SimpleSplashScreenState extends State<SimpleSplashScreen> {
                   letterSpacing: 3,
                 ),
               ),
-              Text(
+              const Text(
                 'AUTHORITY',
                 style: TextStyle(
                   fontSize: 32,
@@ -89,10 +89,10 @@ class _SimpleSplashScreenState extends State<SimpleSplashScreen> {
                   letterSpacing: 2,
                 ),
               ),
-              
-              SizedBox(height: 20),
-              
-              Text(
+
+              const SizedBox(height: 20),
+
+              const Text(
                 'Divine Wisdom • Spiritual Authority',
                 style: TextStyle(
                   fontSize: 16,
@@ -101,18 +101,18 @@ class _SimpleSplashScreenState extends State<SimpleSplashScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              
-              SizedBox(height: 60),
-              
+
+              const SizedBox(height: 60),
+
               // Loading indicator
-              CircularProgressIndicator(
+              const CircularProgressIndicator(
                 color: Colors.white,
                 strokeWidth: 3,
               ),
-              
-              SizedBox(height: 16),
-              
-              Text(
+
+              const SizedBox(height: 16),
+
+              const Text(
                 'Loading...',
                 style: TextStyle(
                   fontSize: 14,

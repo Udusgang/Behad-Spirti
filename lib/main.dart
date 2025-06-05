@@ -17,11 +17,11 @@ void main() {
     ),
   );
 
-  runApp(const SpiritApp());
+  runApp(const AlmightyAuthorityApp());
 }
 
-class SpiritApp extends StatelessWidget {
-  const SpiritApp({super.key});
+class AlmightyAuthorityApp extends StatelessWidget {
+  const AlmightyAuthorityApp({super.key});
 
   @override
   Widget build(BuildContext context) {
