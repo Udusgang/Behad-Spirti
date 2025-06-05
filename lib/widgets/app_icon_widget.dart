@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import '../theme/app_theme.dart';
 
 class AppIconWidget extends StatelessWidget {
@@ -127,8 +128,8 @@ class IconGeometryPainter extends CustomPainter {
     // Draw sacred geometry lines
     for (int i = 0; i < 8; i++) {
       final angle = (i * 45) * (3.14159 / 180);
-      final x = center.dx + radius * 0.6 * (angle.cos());
-      final y = center.dy + radius * 0.6 * (angle.sin());
+      final x = center.dx + radius * 0.6 * math.cos(angle);
+      final y = center.dy + radius * 0.6 * math.sin(angle);
       
       canvas.drawLine(center, Offset(x, y), paint);
     }

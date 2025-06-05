@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import '../theme/app_theme.dart';
 
 class AlmightyLogo extends StatelessWidget {
@@ -259,8 +260,8 @@ class SacredGeometryPainter extends CustomPainter {
     // Draw sacred geometry pattern
     for (int i = 0; i < 6; i++) {
       final angle = (i * 60) * (3.14159 / 180);
-      final x = center.dx + radius * 0.7 * (angle.cos());
-      final y = center.dy + radius * 0.7 * (angle.sin());
+      final x = center.dx + radius * 0.7 * math.cos(angle);
+      final y = center.dy + radius * 0.7 * math.sin(angle);
       
       canvas.drawLine(center, Offset(x, y), paint);
     }
