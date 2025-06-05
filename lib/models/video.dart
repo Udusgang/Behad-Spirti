@@ -56,7 +56,7 @@ class Video {
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
-  String get youtubeUrl => 'https://www.youtube.com/watch?v=$youtubeId';
+  String get youtubeUrl => '  ';
   
   String get youtubeThumbnailUrl => 'https://img.youtube.com/vi/$youtubeId/maxresdefault.jpg';
 

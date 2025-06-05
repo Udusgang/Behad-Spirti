@@ -36,10 +36,14 @@ class VideoProvider with ChangeNotifier {
         flags: const YoutubePlayerFlags(
           autoPlay: false,
           mute: false,
-          enableCaption: true,
-          captionLanguage: 'en',
+          enableCaption: false, // Disable captions to reduce loading issues
           forceHD: false,
           loop: false,
+          isLive: false,
+          controlsVisibleAtStart: true,
+          hideControls: false,
+          hideThumbnail: false,
+          disableDragSeek: false,
         ),
       );
 
