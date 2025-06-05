@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'providers/providers.dart';
 import 'theme/app_theme.dart';
 import 'utils/constants.dart';
-import 'screens/splash_screen.dart';
+import 'screens/simple_splash_screen.dart';
 
 void main() {
   // Set system UI overlay style
@@ -34,8 +34,13 @@ class SpiritApp extends StatelessWidget {
       child: MaterialApp(
         title: AppConstants.appName,
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        home: const SplashScreen(),
+        theme: AppTheme.lightTheme.copyWith(
+          // Ensure Material Icons are loaded
+          iconTheme: const IconThemeData(
+            color: Colors.black87,
+          ),
+        ),
+        home: const SimpleSplashScreen(),
       ),
     );
   }
