@@ -305,29 +305,57 @@ class _VideoScreenState extends State<VideoScreen> {
     return Consumer<ProgressProvider>(
       builder: (context, progressProvider, child) {
         final isCompleted = progressProvider.isVideoCompleted(widget.video.id);
-        
-        return Row(
+
+        return Column(
           children: [
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  if (isCompleted) {
-                    progressProvider.markVideoNotCompleted(
-                      widget.video.id,
-                      widget.video.courseId,
-                    );
-                    AppHelpers.showInfoSnackBar(context, 'Video marked as not completed');
-                  } else {
-                    progressProvider.markVideoCompleted(
-                      widget.video.id,
-                      widget.video.courseId,
-                    );
-                    AppHelpers.showSuccessSnackBar(context, AppConstants.videoCompletedMessage);
-                  }
-                },
-                icon: Icon(isCompleted ? Icons.replay : Icons.check),
-                label: Text(isCompleted ? 'Mark as Not Completed' : 'Mark as Completed'),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      if (isCompleted) {
+                        progressProvider.markVideoNotCompleted(
+                          widget.video.id,
+                          widget.video.courseId,
+                        );
+                        AppHelpers.showInfoSnackBar(context, 'Video marked as not completed');
+                      } else {
+                        progressProvider.markVideoCompleted(
+                          widget.video.id,
+                          widget.video.courseId,
+                        );
+                        AppHelpers.showSuccessSnackBar(context, AppConstants.videoCompletedMessage);
+                      }
+                    },
+                    icon: Icon(isCompleted ? Icons.replay : Icons.check),
+                    label: Text(isCompleted ? 'Mark as Not Completed' : 'Mark as Completed'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _openInYouTube(),
+                    icon: const Icon(Icons.open_in_new),
+                    label: const Text('Open in YouTube'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.red,
+                      side: const BorderSide(color: Colors.red),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _shareVideo(),
+                    icon: const Icon(Icons.share),
+                    label: const Text('Share Video'),
+                  ),
+                ),
+              ],
             ),
           ],
         );

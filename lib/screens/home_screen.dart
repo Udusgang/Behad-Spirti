@@ -51,37 +51,106 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildAppBar() {
     return SliverAppBar(
-      expandedHeight: 120,
+      expandedHeight: 200,
       floating: false,
       pinned: true,
       backgroundColor: Colors.transparent,
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
-          decoration: AppTheme.gradientDecoration,
-          child: const Padding(
-            padding: EdgeInsets.all(AppConstants.defaultPadding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Welcome to Spirit',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'Discover your spiritual journey',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70,
-                  ),
-                ),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1A1A2E),
+                Color(0xFF16213E),
+                Color(0xFF0F3460),
+                Color(0xFF533483),
+                Color(0xFF6B46C1),
               ],
+              stops: [0.0, 0.2, 0.5, 0.8, 1.0],
             ),
+          ),
+          child: Stack(
+            children: [
+              // Animated background particles
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: HeaderParticlesPainter(),
+                ),
+              ),
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(AppConstants.defaultPadding),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // App logo and title
+                    Row(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFFFFFFFF), Color(0xFFF8FAFC)],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withOpacity(0.3),
+                                blurRadius: 15,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.self_improvement,
+                            color: Color(0xFF6B46C1),
+                            size: 28,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [Colors.white, Color(0xFFF8FAFC)],
+                          ).createShader(bounds),
+                          child: const Text(
+                            'Spirit',
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Discover your spiritual journey',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white.withOpacity(0.9),
+                        fontWeight: FontWeight.w300,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Ancient wisdom • Modern learning • Inner growth',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white.withOpacity(0.7),
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -356,4 +425,37 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
+
+class HeaderParticlesPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.fill;
+
+    // Create floating particles
+    for (int i = 0; i < 20; i++) {
+      final x = (i * 37.5) % size.width;
+      final y = (i * 23.7) % size.height;
+      final radius = (i % 3) + 1.0;
+
+      paint.color = Colors.white.withOpacity(0.1 + (i % 3) * 0.05);
+      canvas.drawCircle(Offset(x, y), radius, paint);
+    }
+
+    // Add some larger glowing orbs
+    for (int i = 0; i < 5; i++) {
+      final x = (i * 80.0) % size.width;
+      final y = (i * 60.0) % size.height;
+
+      paint.color = Colors.white.withOpacity(0.05);
+      canvas.drawCircle(Offset(x, y), 15, paint);
+
+      paint.color = Colors.white.withOpacity(0.02);
+      canvas.drawCircle(Offset(x, y), 25, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
