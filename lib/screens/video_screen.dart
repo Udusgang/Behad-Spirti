@@ -369,8 +369,8 @@ class _VideoScreenState extends State<VideoScreen> {
                 color: Colors.white,
                 size: 28,
               ),
-              onPressed: () {
-                videoProvider.togglePlayPause();
+              onPressed: () async {
+                await videoProvider.togglePlayPause();
               },
               tooltip: videoProvider.isPlaying ? 'Pause' : 'Play',
             ),

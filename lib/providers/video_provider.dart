@@ -30,7 +30,9 @@ class VideoProvider with ChangeNotifier {
       await disposeController();
 
       _currentVideo = video;
-      
+      print('🎬 Initializing video: ${video.title}');
+      print('📺 YouTube ID: ${video.youtubeId}');
+
       _controller = YoutubePlayerController(
         initialVideoId: video.youtubeId,
         flags: const YoutubePlayerFlags(
@@ -50,8 +52,13 @@ class VideoProvider with ChangeNotifier {
       // Add listeners
       _controller!.addListener(_onPlayerStateChanged);
 
+      // Wait a moment for controller to initialize
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      print('✅ YouTube controller initialized');
       _error = null;
     } catch (e) {
+      print('❌ Error initializing video: $e');
       _error = 'Failed to initialize video: $e';
     } finally {
       _setLoading(false);
@@ -62,35 +69,76 @@ class VideoProvider with ChangeNotifier {
   void _onPlayerStateChanged() {
     if (_controller == null) return;
 
-    final playerState = _controller!.value.playerState;
-    final position = _controller!.value.position;
-    final duration = _controller!.value.metaData.duration;
+    try {
+      // Check if controller is ready before accessing values
+      if (_controller!.value.isReady) {
+        final playerState = _controller!.value.playerState;
+        final position = _controller!.value.position;
+        final duration = _controller!.value.metaData.duration;
 
-    _isPlaying = playerState == PlayerState.playing;
-    _currentPosition = position;
-    _totalDuration = duration;
+        _isPlaying = playerState == PlayerState.playing;
+        _currentPosition = position;
+        _totalDuration = duration;
+
+        // Clear any previous errors when controller is working
+        if (_error != null) {
+          _error = null;
+        }
+
+        print('🎵 Player state: ${playerState.toString()}, Position: ${position.inSeconds}s');
+      } else {
+        print('⏳ Controller not ready in state change listener');
+      }
+    } catch (e) {
+      print('❌ Error in player state change: $e');
+      // Don't set error here as it might be temporary
+    }
 
     notifyListeners();
   }
 
   // Play video
   Future<void> play() async {
-    if (_controller != null) {
-      _controller!.play();
+    if (_controller != null && _controller!.value.isReady) {
+      try {
+        _controller!.play();
+        _isPlaying = true;
+        notifyListeners();
+      } catch (e) {
+        print('Error playing video: $e');
+        _setError('Failed to play video');
+      }
+    } else {
+      print('Controller not ready for play');
     }
   }
 
   // Pause video
   Future<void> pause() async {
-    if (_controller != null) {
-      _controller!.pause();
+    if (_controller != null && _controller!.value.isReady) {
+      try {
+        _controller!.pause();
+        _isPlaying = false;
+        notifyListeners();
+      } catch (e) {
+        print('Error pausing video: $e');
+        _setError('Failed to pause video');
+      }
+    } else {
+      print('Controller not ready for pause');
     }
   }
 
   // Seek to position
   Future<void> seekTo(Duration position) async {
-    if (_controller != null) {
-      _controller!.seekTo(position);
+    if (_controller != null && _controller!.value.isReady) {
+      try {
+        _controller!.seekTo(position);
+      } catch (e) {
+        print('Error seeking video: $e');
+      }
+    } else {
+      print('Controller not ready for seeking');
     }
   }
 
@@ -105,19 +153,31 @@ class VideoProvider with ChangeNotifier {
 
   // Set volume
   Future<void> setVolume(int volume) async {
-    if (_controller != null) {
-      _controller!.setVolume(volume);
+    if (_controller != null && _controller!.value.isReady) {
+      try {
+        _controller!.setVolume(volume);
+      } catch (e) {
+        print('Error setting volume: $e');
+      }
+    } else {
+      print('Controller not ready for volume control');
     }
   }
 
   // Toggle mute
   Future<void> toggleMute() async {
-    if (_controller != null) {
-      if (_controller!.value.volume > 0) {
-        _controller!.setVolume(0);
-      } else {
-        _controller!.setVolume(100);
+    if (_controller != null && _controller!.value.isReady) {
+      try {
+        if (_controller!.value.volume > 0) {
+          _controller!.setVolume(0);
+        } else {
+          _controller!.setVolume(100);
+        }
+      } catch (e) {
+        print('Error toggling mute: $e');
       }
+    } else {
+      print('Controller not ready for mute control');
     }
   }
 
