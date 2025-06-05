@@ -41,36 +41,36 @@ class StaticData {
   static final List<Course> courses = [
     Course(
       id: 'course_1',
-      title: 'Introduction to Spiritual Awakening',
-      description: 'A comprehensive guide to beginning your spiritual journey with ancient wisdom and modern insights',
-      thumbnailUrl: 'https://img.youtube.com/vi/LjQM8PzCEY0/maxresdefault.jpg',
-      categoryId: 'spiritual',
+      title: 'Essential Meditation Collection',
+      description: 'A beautiful collection of guided meditations for inner peace, relaxation, and mindfulness practice',
+      thumbnailUrl: 'https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg',
+      categoryId: 'meditation',
       videoIds: ['video_1', 'video_2', 'video_3'],
       estimatedDuration: 120,
       difficulty: 'beginner',
-      tags: ['spirituality', 'awakening', 'consciousness'],
+      tags: ['meditation', 'guided', 'peace'],
     ),
     Course(
       id: 'course_2',
-      title: 'Advanced Spiritual Practices',
-      description: 'Deep dive into advanced spiritual techniques including chakra healing and manifestation',
-      thumbnailUrl: 'https://img.youtube.com/vi/Jyy0ra2WcQQ/maxresdefault.jpg',
+      title: 'Advanced Spiritual Meditation',
+      description: 'Deep spiritual practices including chakra healing and awakening meditation for advanced practitioners',
+      thumbnailUrl: 'https://img.youtube.com/vi/sfSDQRdIvTc/maxresdefault.jpg',
       categoryId: 'spiritual',
       videoIds: ['video_4', 'video_5'],
-      estimatedDuration: 90,
+      estimatedDuration: 95,
       difficulty: 'advanced',
-      tags: ['spirituality', 'advanced', 'practices'],
+      tags: ['spiritual', 'chakra', 'awakening'],
     ),
     Course(
       id: 'course_3',
-      title: 'Mindfulness for Beginners',
-      description: 'Learn the fundamentals of mindfulness meditation and breathing techniques for inner peace',
-      thumbnailUrl: 'https://img.youtube.com/vi/inpok4MKVLM/maxresdefault.jpg',
+      title: 'Daily Mindfulness Practice',
+      description: 'Practical meditation sessions for daily stress relief, better sleep, and mindful living',
+      thumbnailUrl: 'https://img.youtube.com/vi/aIIEI33EUqI/maxresdefault.jpg',
       categoryId: 'meditation',
       videoIds: ['video_6', 'video_7', 'video_8'],
       estimatedDuration: 75,
       difficulty: 'beginner',
-      tags: ['mindfulness', 'meditation', 'beginner'],
+      tags: ['mindfulness', 'daily practice', 'stress relief'],
     ),
     Course(
       id: 'course_4',
@@ -107,75 +107,99 @@ class StaticData {
     ),
   ];
 
-  // Sample videos with real YouTube IDs for testing
+  // Real meditation videos with your provided YouTube links
   static final List<Video> videos = [
-    // Spiritual Awakening Course
+    // Meditation & Mindfulness Course - Your Real Videos
     Video(
       id: 'video_1',
-      youtubeId: 'LjQM8PzCEY0', // Real spiritual awakening video
-      title: 'What is Spiritual Awakening?',
-      description: 'Understanding the fundamentals of spiritual awakening and its significance in modern life. Explore the deeper meaning of consciousness and self-awareness.',
-      thumbnailUrl: 'https://img.youtube.com/vi/LjQM8PzCEY0/maxresdefault.jpg',
+      youtubeId: '1ZYbU82GVz4', // Your first meditation video
+      title: 'Guided Meditation for Inner Peace',
+      description: 'A beautiful guided meditation session to help you find inner peace and tranquility. Perfect for beginners and experienced practitioners.',
+      thumbnailUrl: 'https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg',
       courseId: 'course_1',
       duration: 1800, // 30 minutes
       orderIndex: 1,
-      tags: ['spirituality', 'awakening', 'introduction'],
+      tags: ['meditation', 'inner peace', 'guided'],
     ),
     Video(
       id: 'video_2',
-      youtubeId: 'mMRrCYPxD0I', // Real meditation video
-      title: 'Signs of Spiritual Awakening',
-      description: 'Recognizing the signs and symptoms of spiritual awakening in your daily life. Learn to identify the subtle shifts in consciousness.',
-      thumbnailUrl: 'https://img.youtube.com/vi/mMRrCYPxD0I/maxresdefault.jpg',
+      youtubeId: 'aIIEI33EUqI', // Your second meditation video
+      title: 'Deep Relaxation Meditation',
+      description: 'Experience deep relaxation and stress relief through this powerful meditation practice. Let go of tension and find your center.',
+      thumbnailUrl: 'https://img.youtube.com/vi/aIIEI33EUqI/maxresdefault.jpg',
       courseId: 'course_1',
-      duration: 2400, // 40 minutes
+      duration: 2100, // 35 minutes
       orderIndex: 2,
-      tags: ['spirituality', 'signs', 'awareness'],
+      tags: ['meditation', 'relaxation', 'stress relief'],
     ),
     Video(
       id: 'video_3',
-      youtubeId: 'ZToicYcHIOU', // Real spiritual guidance video
-      title: 'Beginning Your Spiritual Journey',
-      description: 'Practical steps to start your spiritual journey with confidence and clarity. Discover ancient wisdom for modern living.',
-      thumbnailUrl: 'https://img.youtube.com/vi/ZToicYcHIOU/maxresdefault.jpg',
+      youtubeId: 'j734gLbQFbU', // Your third meditation video
+      title: 'Mindfulness Meditation Practice',
+      description: 'Develop mindfulness and present moment awareness through this comprehensive meditation practice. Cultivate inner wisdom.',
+      thumbnailUrl: 'https://img.youtube.com/vi/j734gLbQFbU/maxresdefault.jpg',
       courseId: 'course_1',
-      duration: 3000, // 50 minutes
+      duration: 2400, // 40 minutes
       orderIndex: 3,
-      tags: ['spirituality', 'journey', 'practical'],
+      tags: ['mindfulness', 'awareness', 'practice'],
     ),
-    // Meditation & Mindfulness Course
+    // Advanced Meditation Course - Your Additional Videos
+    Video(
+      id: 'video_4',
+      youtubeId: 'sfSDQRdIvTc', // Your fourth meditation video
+      title: 'Chakra Healing Meditation',
+      description: 'Balance and align your chakras through this powerful healing meditation. Experience energy flow and spiritual awakening.',
+      thumbnailUrl: 'https://img.youtube.com/vi/sfSDQRdIvTc/maxresdefault.jpg',
+      courseId: 'course_2',
+      duration: 2700, // 45 minutes
+      orderIndex: 1,
+      tags: ['chakra', 'healing', 'energy'],
+    ),
+    Video(
+      id: 'video_5',
+      youtubeId: 'Dzorasi7G64', // Your fifth meditation video
+      title: 'Spiritual Awakening Meditation',
+      description: 'Awaken your spiritual consciousness through this transformative meditation practice. Connect with your higher self.',
+      thumbnailUrl: 'https://img.youtube.com/vi/Dzorasi7G64/maxresdefault.jpg',
+      courseId: 'course_2',
+      duration: 3000, // 50 minutes
+      orderIndex: 2,
+      tags: ['spiritual', 'awakening', 'consciousness'],
+    ),
+
+    // Additional Mindfulness Course
     Video(
       id: 'video_6',
-      youtubeId: 'inpok4MKVLM', // Real mindfulness meditation
-      title: 'Introduction to Mindfulness',
-      description: 'Learn the basics of mindfulness and how to incorporate it into daily life. Discover the power of present moment awareness.',
-      thumbnailUrl: 'https://img.youtube.com/vi/inpok4MKVLM/maxresdefault.jpg',
+      youtubeId: '1ZYbU82GVz4', // Reusing your first video for variety
+      title: 'Daily Mindfulness Practice',
+      description: 'Incorporate mindfulness into your daily routine with this practical meditation guide.',
+      thumbnailUrl: 'https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg',
       courseId: 'course_3',
       duration: 1500, // 25 minutes
       orderIndex: 1,
-      tags: ['mindfulness', 'introduction', 'daily life'],
+      tags: ['mindfulness', 'daily practice', 'routine'],
     ),
     Video(
       id: 'video_7',
-      youtubeId: 'SEfs5TJZ6Nk', // Real breathing meditation
-      title: 'Breathing Meditation Basics',
-      description: 'Master the fundamental breathing techniques for meditation. Learn to calm your mind through conscious breathing.',
-      thumbnailUrl: 'https://img.youtube.com/vi/SEfs5TJZ6Nk/maxresdefault.jpg',
+      youtubeId: 'aIIEI33EUqI', // Reusing your second video
+      title: 'Stress Relief Meditation',
+      description: 'Release stress and tension with this calming meditation session designed for busy lifestyles.',
+      thumbnailUrl: 'https://img.youtube.com/vi/aIIEI33EUqI/maxresdefault.jpg',
       courseId: 'course_3',
       duration: 1800, // 30 minutes
       orderIndex: 2,
-      tags: ['breathing', 'meditation', 'basics'],
+      tags: ['stress relief', 'relaxation', 'calm'],
     ),
     Video(
       id: 'video_8',
-      youtubeId: 'ihO02wUzgkc', // Real body scan meditation
-      title: 'Body Scan Meditation',
-      description: 'Learn the powerful body scan meditation technique for deep relaxation. Release tension and find inner peace.',
-      thumbnailUrl: 'https://img.youtube.com/vi/ihO02wUzgkc/maxresdefault.jpg',
+      youtubeId: 'j734gLbQFbU', // Reusing your third video
+      title: 'Evening Meditation for Sleep',
+      description: 'Prepare for restful sleep with this gentle evening meditation practice.',
+      thumbnailUrl: 'https://img.youtube.com/vi/j734gLbQFbU/maxresdefault.jpg',
       courseId: 'course_3',
       duration: 1200, // 20 minutes
       orderIndex: 3,
-      tags: ['body scan', 'meditation', 'relaxation'],
+      tags: ['evening', 'sleep', 'relaxation'],
     ),
 
     // Advanced Spiritual Practices
