@@ -154,7 +154,7 @@ class _VideoScreenState extends State<VideoScreen> {
         SystemChrome.setPreferredOrientations([
           DeviceOrientation.portraitUp,
         ]);
-        videoProvider.setFullScreen(false);
+        videoProvider.exitFullScreen();
       },
       player: YoutubePlayer(
         controller: videoProvider.controller!,
@@ -212,7 +212,7 @@ class _VideoScreenState extends State<VideoScreen> {
                 SystemChrome.setPreferredOrientations([
                   DeviceOrientation.portraitUp,
                 ]);
-                videoProvider.setFullScreen(false);
+                videoProvider.exitFullScreen();
               },
               player: YoutubePlayer(
                 controller: videoProvider.controller!,
@@ -836,7 +836,7 @@ class _VideoScreenState extends State<VideoScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Row(
           children: [
-            Icon(Icons.celebration, color: Colors.gold),
+            Icon(Icons.celebration, color: Colors.amber),
             SizedBox(width: 8),
             Text('Course Completed!'),
           ],
