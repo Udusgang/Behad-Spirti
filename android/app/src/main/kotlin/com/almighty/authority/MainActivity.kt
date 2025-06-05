@@ -1,4 +1,4 @@
-package com.example.myapp
+package com.almighty.authority
 
 import io.flutter.embedding.android.FlutterActivity
 

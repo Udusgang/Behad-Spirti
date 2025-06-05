@@ -20,10 +20,8 @@ class ProfileScreen extends StatelessWidget {
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              // TODO: Navigate to settings
-            },
+            icon: const Icon(Icons.logout),
+            onPressed: () => _showLogoutDialog(context),
           ),
         ],
       ),
@@ -52,37 +50,60 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildProfileHeader() {
-    return Container(
-      padding: const EdgeInsets.all(AppConstants.defaultPadding),
-      decoration: AppTheme.gradientDecoration,
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundColor: Colors.white.withOpacity(0.2),
-            child: const Icon(
-              Icons.person,
-              size: 50,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Spiritual Learner',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            'On a journey of self-discovery',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white70,
-            ),
-          ),
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        final user = authProvider.currentUser;
+
+        return Container(
+          padding: const EdgeInsets.all(AppConstants.defaultPadding),
+          decoration: AppTheme.gradientDecoration,
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.white.withOpacity(0.2),
+                child: user?.hasPhotoURL == true
+                    ? ClipOval(
+                        child: Image.network(
+                          user!.photoURL!,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              Icons.person,
+                              size: 50,
+                              color: Colors.white,
+                            );
+                          },
+                        ),
+                      )
+                    : Text(
+                        user?.initials ?? 'U',
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                user?.displayName ?? 'Spiritual Learner',
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                user?.email ?? 'On a journey of self-discovery',
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white70,
+                ),
+              ),
           const SizedBox(height: 16),
           Consumer<ProgressProvider>(
             builder: (context, progressProvider, child) {
@@ -106,8 +127,10 @@ class ProfileScreen extends StatelessWidget {
               );
             },
           ),
-        ],
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -536,6 +559,35 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Sign Out'),
+          content: const Text('Are you sure you want to sign out?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                final authProvider = context.read<AuthProvider>();
+                await authProvider.signOut();
+              },
+              child: const Text(
+                'Sign Out',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

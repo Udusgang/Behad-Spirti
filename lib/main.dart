@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'providers/providers.dart';
 import 'theme/app_theme.dart';
 import 'utils/constants.dart';
-import 'screens/splash_screen.dart';
+import 'screens/auth_wrapper.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp();
+
+  // Initialize auth listener
+  final authProvider = AuthProvider();
+  authProvider.initializeAuthListener();
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -17,16 +26,19 @@ void main() {
     ),
   );
 
-  runApp(const SpiritApp());
+  runApp(SpiritApp(authProvider: authProvider));
 }
 
 class SpiritApp extends StatelessWidget {
-  const SpiritApp({super.key});
+  final AuthProvider authProvider;
+
+  const SpiritApp({super.key, required this.authProvider});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: authProvider),
         ChangeNotifierProvider(create: (_) => CourseProvider()),
         ChangeNotifierProvider(create: (_) => ProgressProvider()),
         ChangeNotifierProvider(create: (_) => VideoProvider()),
@@ -40,7 +52,7 @@ class SpiritApp extends StatelessWidget {
             color: Colors.black87,
           ),
         ),
-        home: const SplashScreen(),
+        home: const AuthWrapper(),
       ),
     );
   }

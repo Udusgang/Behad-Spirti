@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "639021940948",
+    "project_id": "almighty-authority",
+    "storage_bucket": "almighty-authority.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639021940948:android:4a29ab79f26572911cbb41",
+        "android_client_info": {
+          "package_name": "com.almighty.authority"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8QppE5WKlRZT0Uy2j3I7c8p1vWAGbKGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

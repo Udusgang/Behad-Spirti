@@ -2,3 +2,4 @@
 export 'course_provider.dart';
 export 'progress_provider.dart';
 export 'video_provider.dart';
+export 'auth_provider.dart';
