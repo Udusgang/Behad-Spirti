@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../models/models.dart';
+import '../../models/video.dart';
+import '../../models/course.dart';
 import '../../providers/dynamic_course_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/cosmic/starfield_background.dart';
@@ -301,7 +302,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
               value: _selectedCourseId.isEmpty ? null : _selectedCourseId,
               hint: const Text('Select Course'),
               isExpanded: true,
-              items: courseProvider.courses.map((course) {
+              items: courseProvider.courses.map<DropdownMenuItem<String>>((course) {
                 return DropdownMenuItem<String>(
                   value: course.id,
                   child: Text(

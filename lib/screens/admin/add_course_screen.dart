@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../models/models.dart';
+import '../../models/course.dart';
+import '../../models/category.dart';
 import '../../providers/dynamic_course_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/cosmic/starfield_background.dart';
@@ -241,7 +242,7 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
               value: _selectedCategoryId.isEmpty ? null : _selectedCategoryId,
               hint: const Text('Select Category'),
               isExpanded: true,
-              items: courseProvider.categories.map((category) {
+              items: courseProvider.categories.map<DropdownMenuItem<String>>((category) {
                 return DropdownMenuItem<String>(
                   value: category.id,
                   child: Text(category.name),

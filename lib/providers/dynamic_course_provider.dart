@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'dart:async';
-import '../models/models.dart';
+import '../models/category.dart';
+import '../models/course.dart';
+import '../models/video.dart';
 import '../services/firestore_service.dart';
 import '../data/static_data.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'dart:async';
-import '../models/models.dart';
+import '../models/user_progress.dart';
 import '../services/firestore_service.dart';
 import '../services/auth_service.dart';
 

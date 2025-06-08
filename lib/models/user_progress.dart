@@ -37,6 +37,22 @@ class UserProgress {
     };
   }
 
+  UserProgress copyWith({
+    String? userId,
+    Map<String, VideoProgress>? videoProgress,
+    Map<String, CourseProgress>? courseProgress,
+    int? totalWatchTimeMinutes,
+    DateTime? lastWatchedAt,
+  }) {
+    return UserProgress(
+      userId: userId ?? this.userId,
+      videoProgress: videoProgress ?? this.videoProgress,
+      courseProgress: courseProgress ?? this.courseProgress,
+      totalWatchTimeMinutes: totalWatchTimeMinutes ?? this.totalWatchTimeMinutes,
+      lastWatchedAt: lastWatchedAt ?? this.lastWatchedAt,
+    );
+  }
+
   // Helper getters
   int get completedVideosCount {
     return videoProgress.values.where((progress) => progress.isCompleted).length;
@@ -61,12 +77,14 @@ class VideoProgress {
   final String videoId;
   final bool isCompleted;
   final int watchedSeconds;
+  final int totalSeconds;
   final DateTime lastWatchedAt;
 
   const VideoProgress({
     required this.videoId,
     required this.isCompleted,
     required this.watchedSeconds,
+    required this.totalSeconds,
     required this.lastWatchedAt,
   });
 
@@ -75,6 +93,7 @@ class VideoProgress {
       videoId: json['videoId'] as String,
       isCompleted: json['isCompleted'] as bool,
       watchedSeconds: json['watchedSeconds'] as int,
+      totalSeconds: json['totalSeconds'] as int? ?? 0,
       lastWatchedAt: DateTime.parse(json['lastWatchedAt'] as String),
     );
   }
@@ -84,6 +103,7 @@ class VideoProgress {
       'videoId': videoId,
       'isCompleted': isCompleted,
       'watchedSeconds': watchedSeconds,
+      'totalSeconds': totalSeconds,
       'lastWatchedAt': lastWatchedAt.toIso8601String(),
     };
   }
@@ -91,6 +111,11 @@ class VideoProgress {
   double getProgressPercentage(int totalDuration) {
     if (totalDuration == 0) return 0.0;
     return (watchedSeconds / totalDuration).clamp(0.0, 1.0);
+  }
+
+  double get progressPercentage {
+    if (totalSeconds == 0) return 0.0;
+    return (watchedSeconds / totalSeconds).clamp(0.0, 1.0);
   }
 }
 
