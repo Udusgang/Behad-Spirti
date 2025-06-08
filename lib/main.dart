@@ -44,7 +44,7 @@ class SpiritApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: authProvider),
         ChangeNotifierProvider(create: (_) => DynamicCourseProvider()),
         ChangeNotifierProvider(create: (_) => DynamicProgressProvider()),
-        ChangeNotifierProvider(create: (_) => VideoProvider()),
+
         // Keep old providers for backward compatibility
         ChangeNotifierProvider(create: (_) => DynamicCourseProvider()),
         ChangeNotifierProvider(create: (_) => ProgressProvider()),

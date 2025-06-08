@@ -226,10 +226,10 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildQuickStats(BuildContext context) {
-    return Consumer2<ProgressProvider, CourseProvider>(
+    return Consumer2<ProgressProvider, DynamicCourseProvider>(
       builder: (context, progressProvider, courseProvider, child) {
-        final totalCourses = courseProvider.totalCourseCount;
-        final totalVideos = courseProvider.totalVideoCount;
+        final totalCourses = courseProvider.courses.length;
+        final totalVideos = courseProvider.videos.length;
         final completedVideos = progressProvider.userProgress.completedVideosCount;
         final completedCourses = progressProvider.userProgress.completedCoursesCount;
 

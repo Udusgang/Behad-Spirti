@@ -27,14 +27,12 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<VideoProvider>().initializeVideo(widget.video);
-    });
+    // Video initialization will be handled differently
   }
 
   @override
   void dispose() {
-    context.read<VideoProvider>().disposeController();
+    // Video disposal will be handled differently
     super.dispose();
   }
 
@@ -42,9 +40,90 @@ class _VideoScreenState extends State<VideoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Consumer<VideoProvider>(
-        builder: (context, videoProvider, child) {
-          if (videoProvider.isLoading) {
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppTheme.deepSpace,
+              AppTheme.primaryPurple,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Placeholder for video player
+              Container(
+                height: 200,
+                color: Colors.black,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.play_circle_outline,
+                        size: 64,
+                        color: AppTheme.accentGold,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Video Player Coming Soon',
+                        style: TextStyle(
+                          color: AppTheme.starWhite,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        widget.video.title,
+                        style: TextStyle(
+                          color: AppTheme.cosmicSilver,
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Video details
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.video.title,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.starWhite,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        widget.video.description,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppTheme.cosmicSilver,
+                          height: 1.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
             return Container(
               color: Colors.black,
               child: const Center(

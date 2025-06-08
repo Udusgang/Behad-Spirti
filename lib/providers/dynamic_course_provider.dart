@@ -4,7 +4,7 @@ import '../models/category.dart' as app_models;
 import '../models/course.dart';
 import '../models/video.dart';
 import '../services/firestore_service.dart';
-import '../data/static_data.dart';
+
 
 class DynamicCourseProvider with ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();

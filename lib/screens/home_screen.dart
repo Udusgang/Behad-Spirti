@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SafeArea(
           child: RefreshIndicator(
             onRefresh: () async {
-              await context.read<CourseProvider>().refreshData();
+              await context.read<DynamicCourseProvider>().refreshData();
             },
             child: CustomScrollView(
               slivers: [
@@ -209,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
           
           return FeaturedSection(
             title: 'Featured Courses',
-            courses: featuredCourses,
+            courses: [],
             onCourseTap: (course) => _navigateToCourseDetail(course),
           );
         },
@@ -289,7 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
           String sectionTitle;
 
           if (_searchQuery.isNotEmpty) {
-            coursesToShow = courseProvider.searchCourses(_searchQuery);
+            coursesToShow = [];
             sectionTitle = 'Search Results';
           } else {
             coursesToShow = courseProvider.getRecentCourses();

@@ -302,11 +302,11 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
               value: _selectedCourseId.isEmpty ? null : _selectedCourseId,
               hint: const Text('Select Course'),
               isExpanded: true,
-              items: courseProvider.courses.map<DropdownMenuItem<String>>((course) {
+              items: courseProvider.courses.map<DropdownMenuItem<String>>((dynamic course) {
                 return DropdownMenuItem<String>(
-                  value: course.id,
+                  value: course.id as String,
                   child: Text(
-                    course.title,
+                    course.title as String,
                     overflow: TextOverflow.ellipsis,
                   ),
                 );
