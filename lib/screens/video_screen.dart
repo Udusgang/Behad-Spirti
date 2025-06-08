@@ -265,10 +265,10 @@ class _VideoScreenState extends State<VideoScreen> {
         print('🏁 Video ended');
         // Mark video as completed
         _progressProvider.updateVideoProgress(
-          widget.video.id,
-          metaData.duration.inSeconds,
-          metaData.duration.inSeconds,
-          true,
+          videoId: widget.video.id,
+          watchedSeconds: metaData.duration.inSeconds,
+          totalSeconds: metaData.duration.inSeconds,
+          isCompleted: true,
         );
       },
     );
@@ -285,10 +285,10 @@ class _VideoScreenState extends State<VideoScreen> {
           final isCompleted = position.inSeconds / duration.inSeconds >= 0.9;
 
           _progressProvider.updateVideoProgress(
-            widget.video.id,
-            position.inSeconds,
-            duration.inSeconds,
-            isCompleted,
+            videoId: widget.video.id,
+            watchedSeconds: position.inSeconds,
+            totalSeconds: duration.inSeconds,
+            isCompleted: isCompleted,
           );
         }
 

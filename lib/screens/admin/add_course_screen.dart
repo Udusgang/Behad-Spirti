@@ -8,6 +8,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/cosmic/starfield_background.dart';
 import '../../widgets/auth/auth_text_field.dart';
 import '../../widgets/auth/auth_button.dart';
+import '../../utils/helpers.dart';
 
 class AddCourseScreen extends StatefulWidget {
   const AddCourseScreen({super.key});
