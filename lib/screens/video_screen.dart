@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'dart:io';
-import '../providers/providers.dart';
+import '../providers/progress_provider.dart';
 import '../models/models.dart';
 import '../theme/app_theme.dart';
 import '../utils/constants.dart';

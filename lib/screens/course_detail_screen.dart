@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/providers.dart';
+import '../providers/dynamic_course_provider.dart';
+import '../providers/progress_provider.dart';
 import '../models/models.dart';
 import '../theme/app_theme.dart';
 import '../utils/constants.dart';
@@ -271,7 +272,7 @@ class CourseDetailScreen extends StatelessWidget {
   }
 
   Widget _buildVideosList(BuildContext context) {
-    return Consumer<CourseProvider>(
+    return Consumer<DynamicCourseProvider>(
       builder: (context, courseProvider, child) {
         final videos = courseProvider.getVideosByCourse(course.id);
 

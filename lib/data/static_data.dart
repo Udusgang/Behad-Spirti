@@ -1,99 +1,65 @@
 import '../models/models.dart';
 
 class StaticData {
-  // Categories with cosmic universe themes
-  static final List<Category> categories = [
-    Category(
-      id: 'cosmic_creation',
-      name: 'Cosmic Creation',
-      description: 'Discover how the Almighty Authority created the universe and galaxies',
-      iconPath: 'assets/icons/galaxy.png',
-      color: '#1A0B3D', // Deep space purple
-      courseIds: ['course_1', 'course_2'],
-    ),
-    Category(
-      id: 'stellar_wisdom',
-      name: 'Stellar Wisdom',
-      description: 'Ancient cosmic knowledge and divine teachings from the stars',
-      iconPath: 'assets/icons/stars.png',
-      color: '#FFD700', // Star gold
-      courseIds: ['course_3', 'course_4'],
-    ),
-    Category(
-      id: 'divine_mysteries',
-      name: 'Divine Mysteries',
-      description: 'Unlock the sacred mysteries of creation and divine authority',
-      iconPath: 'assets/icons/divine.png',
-      color: '#4C1D95', // Nebula violet
-      courseIds: ['course_5'],
-    ),
-    Category(
-      id: 'universal_consciousness',
-      name: 'Universal Consciousness',
-      description: 'Connect with the cosmic consciousness that governs all existence',
-      iconPath: 'assets/icons/consciousness.png',
-      color: '#1E40AF', // Celestial blue
-      courseIds: ['course_6'],
-    ),
-  ];
+  // Empty data - everything will be dynamic from admin panel
+  static final List<Category> categories = [];
+  static final List<Course> courses = [];
+  static final List<Video> videos = [];
 
-  // Sample courses with YouTube content
-  static final List<Course> courses = [
-    Course(
-      id: 'course_1',
-      title: 'Cosmic Meditation: Journey Through the Universe',
-      description: 'Experience divine meditation while contemplating the vastness of creation by the Almighty Authority',
-      thumbnailUrl: 'https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg',
-      categoryId: 'cosmic_creation',
-      videoIds: ['video_1', 'video_2', 'video_3'],
-      estimatedDuration: 120,
-      difficulty: 'beginner',
-      tags: ['cosmic', 'universe', 'divine', 'creation'],
-    ),
-    Course(
-      id: 'course_2',
-      title: 'Advanced Spiritual Meditation',
-      description: 'Deep spiritual practices including chakra healing and awakening meditation for advanced practitioners',
-      thumbnailUrl: 'https://img.youtube.com/vi/sfSDQRdIvTc/maxresdefault.jpg',
-      categoryId: 'spiritual',
-      videoIds: ['video_4', 'video_5'],
-      estimatedDuration: 95,
-      difficulty: 'advanced',
-      tags: ['spiritual', 'chakra', 'awakening'],
-    ),
-    Course(
-      id: 'course_3',
-      title: 'Daily Mindfulness Practice',
-      description: 'Practical meditation sessions for daily stress relief, better sleep, and mindful living',
-      thumbnailUrl: 'https://img.youtube.com/vi/aIIEI33EUqI/maxresdefault.jpg',
-      categoryId: 'meditation',
-      videoIds: ['video_6', 'video_7', 'video_8'],
-      estimatedDuration: 75,
-      difficulty: 'beginner',
-      tags: ['mindfulness', 'daily practice', 'stress relief'],
-    ),
-    Course(
-      id: 'course_4',
-      title: 'Advanced Meditation Techniques',
-      description: 'Master advanced meditation and breathing techniques for deeper spiritual connection',
-      thumbnailUrl: 'https://img.youtube.com/vi/SEfs5TJZ6Nk/maxresdefault.jpg',
-      categoryId: 'meditation',
-      videoIds: ['video_9', 'video_10'],
-      estimatedDuration: 60,
-      difficulty: 'intermediate',
-      tags: ['meditation', 'advanced', 'breathing'],
-    ),
-    Course(
-      id: 'course_5',
-      title: 'Wisdom of the Ancients',
-      description: 'Explore timeless wisdom from ancient civilizations and sacred traditions',
-      thumbnailUrl: 'https://img.youtube.com/vi/ZToicYcHIOU/maxresdefault.jpg',
-      categoryId: 'ancient_knowledge',
-      videoIds: ['video_11', 'video_12', 'video_13'],
-      estimatedDuration: 150,
-      difficulty: 'intermediate',
-      tags: ['ancient', 'wisdom', 'history'],
-    ),
+  // Empty user progress - will be dynamic
+  static final UserProgress sampleUserProgress = UserProgress(
+    userId: 'user_1',
+    videoProgress: {},
+    courseProgress: {},
+    totalWatchTimeMinutes: 0,
+    lastWatchedAt: DateTime.now(),
+  );
+
+  // Cosmic motivational quotes for the profile screen
+  static final List<String> motivationalQuotes = [
+    "The universe is not only stranger than we imagine, it is stranger than we can imagine. - J.B.S. Haldane",
+    "We are all made of star stuff. - Carl Sagan",
+    "The cosmos is within us. We are made of star-stuff. - Carl Sagan",
+    "Look up at the stars and not down at your feet. - Stephen Hawking",
+    "The universe is under no obligation to make sense to you. - Neil deGrasse Tyson",
+    "The divine light of the Almighty Authority shines through every star in the cosmos.",
+    "In the vastness of space, we find the infinite wisdom of creation.",
+    "Peace comes from within. Do not seek it without. - Buddha",
+  ];
+  // Helper methods for dynamic data
+  static List<Course> getCoursesByCategory(String categoryId) {
+    return courses.where((course) => course.categoryId == categoryId).toList();
+  }
+
+  static List<Video> getVideosByCourse(String courseId) {
+    return videos.where((video) => video.courseId == courseId).toList()
+      ..sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
+  }
+
+  static Course? getCourseById(String courseId) {
+    try {
+      return courses.firstWhere((course) => course.id == courseId);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Video? getVideoById(String videoId) {
+    try {
+      return videos.firstWhere((video) => video.id == videoId);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Category? getCategoryById(String categoryId) {
+    try {
+      return categories.firstWhere((category) => category.id == categoryId);
+    } catch (e) {
+      return null;
+    }
+  }
+}
     Course(
       id: 'course_6',
       title: 'Understanding Consciousness',

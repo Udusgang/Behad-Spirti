@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/providers.dart';
+import '../providers/dynamic_course_provider.dart';
+import '../providers/progress_provider.dart';
 import '../models/models.dart';
 import '../theme/app_theme.dart';
 import '../utils/constants.dart';
@@ -201,7 +202,7 @@ class ProgressScreen extends StatelessWidget {
   }
 
   Widget _buildRecentActivity() {
-    return Consumer2<ProgressProvider, CourseProvider>(
+    return Consumer2<ProgressProvider, DynamicCourseProvider>(
       builder: (context, progressProvider, courseProvider, child) {
         final recentVideoIds = progressProvider.getRecentlyWatchedVideoIds(limit: 3);
         
@@ -317,7 +318,7 @@ class ProgressScreen extends StatelessWidget {
   }
 
   Widget _buildInProgressCourses() {
-    return Consumer2<ProgressProvider, CourseProvider>(
+    return Consumer2<ProgressProvider, DynamicCourseProvider>(
       builder: (context, progressProvider, courseProvider, child) {
         final inProgressCourseIds = progressProvider.getInProgressCourseIds();
         
@@ -364,7 +365,7 @@ class ProgressScreen extends StatelessWidget {
   }
 
   Widget _buildCompletedCourses() {
-    return Consumer2<ProgressProvider, CourseProvider>(
+    return Consumer2<ProgressProvider, DynamicCourseProvider>(
       builder: (context, progressProvider, courseProvider, child) {
         final completedCourseIds = progressProvider.getCompletedCourseIds();
         

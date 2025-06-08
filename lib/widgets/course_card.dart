@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/models.dart';
-import '../providers/providers.dart';
+import '../providers/progress_provider.dart';
 import '../theme/app_theme.dart';
 import '../utils/constants.dart';
 import '../utils/helpers.dart';
@@ -22,7 +22,35 @@ class CourseCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        decoration: AppTheme.cardDecoration,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withOpacity(0.15),
+              Colors.white.withOpacity(0.05),
+              AppTheme.deepSpace.withOpacity(0.8),
+            ],
+            stops: const [0.0, 0.5, 1.0],
+          ),
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
+          border: Border.all(
+            color: AppTheme.accentGold.withOpacity(0.2),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.primaryPurple.withOpacity(0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+            BoxShadow(
+              color: AppTheme.accentGold.withOpacity(0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -127,14 +155,35 @@ class CourseCard extends StatelessWidget {
           children: [
             Text(
               course.title,
-              style: AppTheme.courseTitle,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.starWhite,
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.5),
+                    blurRadius: 3,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Text(
               course.description,
-              style: AppTheme.courseSubtitle,
+              style: TextStyle(
+                fontSize: 13,
+                color: AppTheme.cosmicSilver.withOpacity(0.9),
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.5),
+                    blurRadius: 2,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -143,14 +192,16 @@ class CourseCard extends StatelessWidget {
               children: [
                 Icon(
                   Icons.play_circle_outline,
-                  size: 14,
-                  color: AppTheme.mediumGray,
+                  size: 16,
+                  color: AppTheme.accentGold,
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: 6),
                 Text(
                   '${course.videoCount} videos',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppTheme.mediumGray,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.starWhite.withOpacity(0.8),
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],

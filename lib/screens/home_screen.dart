@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_searchQuery.isNotEmpty) return const SliverToBoxAdapter(child: SizedBox.shrink());
 
     return SliverToBoxAdapter(
-      child: Consumer<CourseProvider>(
+      child: Consumer<DynamicCourseProvider>(
         builder: (context, courseProvider, child) {
           if (courseProvider.isLoading) {
             return const Padding(
@@ -219,14 +219,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildCategoriesSection() {
     return SliverToBoxAdapter(
-      child: Consumer<CourseProvider>(
+      child: Consumer<DynamicCourseProvider>(
         builder: (context, courseProvider, child) {
           if (courseProvider.isLoading) {
             return const SizedBox.shrink();
           }
 
           final categories = courseProvider.categories;
-          
+
           return Padding(
             padding: const EdgeInsets.all(AppConstants.defaultPadding),
             child: Column(
@@ -234,27 +234,41 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   'Categories',
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.starWhite,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.5),
+                        blurRadius: 3,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: AppConstants.defaultPadding),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: AppHelpers.getGridCrossAxisCount(context),
-                    crossAxisSpacing: AppConstants.defaultPadding,
-                    mainAxisSpacing: AppConstants.defaultPadding,
-                    childAspectRatio: 1.2,
+                if (categories.isEmpty)
+                  _buildEmptyState()
+                else
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: AppHelpers.getGridCrossAxisCount(context),
+                      crossAxisSpacing: AppConstants.defaultPadding,
+                      mainAxisSpacing: AppConstants.defaultPadding,
+                      childAspectRatio: 1.2,
+                    ),
+                    itemCount: categories.length,
+                    itemBuilder: (context, index) {
+                      final category = categories[index];
+                      return CategoryCard(
+                        category: category,
+                        onTap: () => _navigateToCategory(category),
+                      );
+                    },
                   ),
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    final category = categories[index];
-                    return CategoryCard(
-                      category: category,
-                      onTap: () => _navigateToCategory(category),
-                    );
-                  },
-                ),
               ],
             ),
           );
@@ -265,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildRecentCoursesSection() {
     return SliverToBoxAdapter(
-      child: Consumer<CourseProvider>(
+      child: Consumer<DynamicCourseProvider>(
         builder: (context, courseProvider, child) {
           if (courseProvider.isLoading) {
             return const SizedBox.shrink();
@@ -354,10 +368,94 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildEmptyState() {
+    return Container(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        children: [
+          Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                colors: [
+                  AppTheme.accentGold.withOpacity(0.3),
+                  AppTheme.primaryPurple.withOpacity(0.1),
+                ],
+              ),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: AppTheme.accentGold.withOpacity(0.3),
+                width: 2,
+              ),
+            ),
+            child: Icon(
+              Icons.explore,
+              size: 60,
+              color: AppTheme.accentGold,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Welcome to the Cosmic Realm',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.starWhite,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.5),
+                  blurRadius: 3,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'The universe awaits your exploration.\nContent will appear here once the cosmic admin adds categories and courses.',
+            style: TextStyle(
+              fontSize: 16,
+              color: AppTheme.cosmicSilver.withOpacity(0.9),
+              height: 1.5,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppTheme.accentGold.withOpacity(0.2),
+                  AppTheme.primaryPurple.withOpacity(0.1),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(
+                color: AppTheme.accentGold.withOpacity(0.3),
+                width: 1,
+              ),
+            ),
+            child: Text(
+              '✨ Coming Soon ✨',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.accentGold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _navigateToCategory(Category category) {
     // For now, we'll show courses from this category
     // In the future, this could navigate to a dedicated category screen
-    final courseProvider = context.read<CourseProvider>();
+    final courseProvider = context.read<DynamicCourseProvider>();
     final categoryCourses = courseProvider.getCoursesByCategory(category.id);
     
     showModalBottomSheet(

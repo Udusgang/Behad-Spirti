@@ -3,7 +3,13 @@ import '../models/models.dart';
 import '../data/static_data.dart';
 
 class ProgressProvider with ChangeNotifier {
-  UserProgress _userProgress = StaticData.sampleUserProgress;
+  UserProgress _userProgress = UserProgress(
+    userId: 'user_1',
+    videoProgress: {},
+    courseProgress: {},
+    totalWatchTimeMinutes: 0,
+    lastWatchedAt: DateTime.now(),
+  );
   bool _isLoading = false;
   String? _error;
 
@@ -69,7 +75,8 @@ class ProgressProvider with ChangeNotifier {
       updatedVideoProgress[videoId] = newVideoProgress;
 
       // Update course progress
-      final courseVideos = StaticData.getVideosByCourse(courseId);
+      // Note: This will need to be updated to use dynamic course provider
+      final courseVideos = <Video>[]; // Empty for now - will be dynamic
       final completedVideosInCourse = courseVideos.where((video) {
         final progress = updatedVideoProgress[video.id];
         return progress?.isCompleted ?? false;
@@ -140,7 +147,8 @@ class ProgressProvider with ChangeNotifier {
       updatedVideoProgress[videoId] = newVideoProgress;
 
       // Update course progress
-      final courseVideos = StaticData.getVideosByCourse(courseId);
+      // Note: This will need to be updated to use dynamic course provider
+      final courseVideos = <Video>[]; // Empty for now - will be dynamic
       final completedVideosInCourse = courseVideos.where((video) {
         final progress = updatedVideoProgress[video.id];
         return progress?.isCompleted ?? false;

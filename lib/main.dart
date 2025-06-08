@@ -46,7 +46,7 @@ class SpiritApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DynamicProgressProvider()),
         ChangeNotifierProvider(create: (_) => VideoProvider()),
         // Keep old providers for backward compatibility
-        ChangeNotifierProvider(create: (_) => CourseProvider()),
+        ChangeNotifierProvider(create: (_) => DynamicCourseProvider()),
         ChangeNotifierProvider(create: (_) => ProgressProvider()),
       ],
       child: MaterialApp(
