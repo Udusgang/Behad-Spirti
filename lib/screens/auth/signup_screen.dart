@@ -5,6 +5,8 @@ import '../../providers/auth_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/auth/auth_text_field.dart';
 import '../../widgets/auth/auth_button.dart';
+import '../../widgets/cosmic/starfield_background.dart';
+import '../../widgets/cosmic/galaxy_animation.dart';
 import 'login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -51,18 +53,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppTheme.secondaryGreen.withOpacity(0.8),
-              AppTheme.secondaryGreen,
-              AppTheme.primaryPurple.withOpacity(0.8),
-            ],
-          ),
-        ),
+      body: StarfieldBackground(
+        starCount: 120,
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
@@ -85,35 +77,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildHeader() {
     return Column(
       children: [
-        Container(
-          width: 120,
-          height: 120,
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
-          ),
-          child: const Icon(
-            Icons.psychology,
-            size: 60,
-            color: Colors.white,
-          ),
+        const GalaxyAnimation(
+          size: 130,
+          primaryColor: Color(0xFF1E40AF),
+          secondaryColor: Color(0xFFC0C0C0),
         ),
         const SizedBox(height: 24),
         Text(
-          'Join Almighty Authority',
+          'Join the Cosmic Order',
           style: GoogleFonts.playfairDisplay(
             fontSize: 28,
             fontWeight: FontWeight.bold,
             color: Colors.white,
+            shadows: [
+              Shadow(
+                color: AppTheme.celestialBlue.withOpacity(0.5),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 8),
         Text(
-          'Begin your journey to enlightenment',
+          'Unlock the secrets of the universe through divine wisdom',
+          textAlign: TextAlign.center,
           style: GoogleFonts.inter(
             fontSize: 16,
-            color: Colors.white.withOpacity(0.9),
+            color: AppTheme.starWhite.withOpacity(0.9),
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.5),
+                blurRadius: 5,
+                offset: const Offset(0, 1),
+              ),
+            ],
           ),
         ),
       ],

@@ -8,6 +8,9 @@ import '../utils/helpers.dart';
 import '../widgets/category_card.dart';
 import '../widgets/course_card.dart';
 import '../widgets/featured_section.dart';
+import '../widgets/cosmic/starfield_background.dart';
+import '../widgets/cosmic/floating_particles.dart';
+import '../widgets/cosmic/galaxy_animation.dart';
 import 'course_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -30,19 +33,22 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            await context.read<CourseProvider>().refreshData();
-          },
-          child: CustomScrollView(
-            slivers: [
-              _buildAppBar(),
-              _buildSearchBar(),
-              _buildFeaturedSection(),
-              _buildCategoriesSection(),
-              _buildRecentCoursesSection(),
-            ],
+      body: StarfieldBackground(
+        starCount: 80,
+        child: SafeArea(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await context.read<CourseProvider>().refreshData();
+            },
+            child: CustomScrollView(
+              slivers: [
+                _buildAppBar(),
+                _buildSearchBar(),
+                _buildFeaturedSection(),
+                _buildCategoriesSection(),
+                _buildRecentCoursesSection(),
+              ],
+            ),
           ),
         ),
       ),
@@ -57,19 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.transparent,
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF1A1A2E),
-                Color(0xFF16213E),
-                Color(0xFF0F3460),
-                Color(0xFF533483),
-                Color(0xFF6B46C1),
-              ],
-              stops: [0.0, 0.2, 0.5, 0.8, 1.0],
-            ),
+          decoration: BoxDecoration(
+            gradient: AppTheme.galaxyGradient,
           ),
           child: Stack(
             children: [
@@ -86,43 +81,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // App logo and title
+                    // Cosmic logo and title
                     Row(
                       children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFFFFFFF), Color(0xFFF8FAFC)],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white.withOpacity(0.3),
-                                blurRadius: 15,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.self_improvement,
-                            color: Color(0xFF6B46C1),
-                            size: 28,
-                          ),
+                        const GalaxyAnimation(
+                          size: 50,
+                          primaryColor: Color(0xFFFFD700),
+                          secondaryColor: Color(0xFFC0C0C0),
                         ),
                         const SizedBox(width: 12),
                         ShaderMask(
-                          shaderCallback: (bounds) => const LinearGradient(
-                            colors: [Colors.white, Color(0xFFF8FAFC)],
+                          shaderCallback: (bounds) => LinearGradient(
+                            colors: [AppTheme.starWhite, AppTheme.accentGold],
                           ).createShader(bounds),
                           child: const Text(
-                            'Spirit',
+                            'Almighty Authority',
                             style: TextStyle(
-                              fontSize: 32,
+                              fontSize: 28,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              letterSpacing: 1.5,
+                              letterSpacing: 1.2,
                             ),
                           ),
                         ),
@@ -130,21 +108,35 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Discover your spiritual journey',
+                      'Explore the cosmic mysteries of creation',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white.withOpacity(0.9),
+                        color: AppTheme.starWhite.withOpacity(0.9),
                         fontWeight: FontWeight.w300,
                         letterSpacing: 0.5,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black.withOpacity(0.5),
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Ancient wisdom • Modern learning • Inner growth',
+                      'Universe • Galaxies • Divine wisdom • Supreme authority',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Colors.white.withOpacity(0.7),
+                        color: AppTheme.cosmicSilver.withOpacity(0.8),
                         fontWeight: FontWeight.w300,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black.withOpacity(0.5),
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
                       ),
                     ),
                   ],

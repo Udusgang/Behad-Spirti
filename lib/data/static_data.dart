@@ -1,38 +1,38 @@
 import '../models/models.dart';
 
 class StaticData {
-  // Categories with spiritual themes
+  // Categories with cosmic universe themes
   static final List<Category> categories = [
     Category(
-      id: 'spiritual',
-      name: 'Spiritual Wisdom',
-      description: 'Ancient wisdom and spiritual teachings for modern life',
-      iconPath: 'assets/icons/spiritual.png',
-      color: '#6B46C1', // Purple
+      id: 'cosmic_creation',
+      name: 'Cosmic Creation',
+      description: 'Discover how the Almighty Authority created the universe and galaxies',
+      iconPath: 'assets/icons/galaxy.png',
+      color: '#1A0B3D', // Deep space purple
       courseIds: ['course_1', 'course_2'],
     ),
     Category(
-      id: 'meditation',
-      name: 'Meditation & Mindfulness',
-      description: 'Guided meditations and mindfulness practices',
-      iconPath: 'assets/icons/meditation.png',
-      color: '#059669', // Green
+      id: 'stellar_wisdom',
+      name: 'Stellar Wisdom',
+      description: 'Ancient cosmic knowledge and divine teachings from the stars',
+      iconPath: 'assets/icons/stars.png',
+      color: '#FFD700', // Star gold
       courseIds: ['course_3', 'course_4'],
     ),
     Category(
-      id: 'ancient_knowledge',
-      name: 'Ancient Knowledge',
-      description: 'Timeless wisdom from ancient civilizations',
-      iconPath: 'assets/icons/ancient.png',
-      color: '#DC2626', // Red
+      id: 'divine_mysteries',
+      name: 'Divine Mysteries',
+      description: 'Unlock the sacred mysteries of creation and divine authority',
+      iconPath: 'assets/icons/divine.png',
+      color: '#4C1D95', // Nebula violet
       courseIds: ['course_5'],
     ),
     Category(
-      id: 'consciousness',
-      name: 'Consciousness',
-      description: 'Exploring the depths of human consciousness',
+      id: 'universal_consciousness',
+      name: 'Universal Consciousness',
+      description: 'Connect with the cosmic consciousness that governs all existence',
       iconPath: 'assets/icons/consciousness.png',
-      color: '#7C3AED', // Violet
+      color: '#1E40AF', // Celestial blue
       courseIds: ['course_6'],
     ),
   ];
@@ -41,14 +41,14 @@ class StaticData {
   static final List<Course> courses = [
     Course(
       id: 'course_1',
-      title: 'Essential Meditation Collection',
-      description: 'A beautiful collection of guided meditations for inner peace, relaxation, and mindfulness practice',
+      title: 'Cosmic Meditation: Journey Through the Universe',
+      description: 'Experience divine meditation while contemplating the vastness of creation by the Almighty Authority',
       thumbnailUrl: 'https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg',
-      categoryId: 'meditation',
+      categoryId: 'cosmic_creation',
       videoIds: ['video_1', 'video_2', 'video_3'],
       estimatedDuration: 120,
       difficulty: 'beginner',
-      tags: ['meditation', 'guided', 'peace'],
+      tags: ['cosmic', 'universe', 'divine', 'creation'],
     ),
     Course(
       id: 'course_2',
@@ -113,35 +113,35 @@ class StaticData {
     Video(
       id: 'video_1',
       youtubeId: '1ZYbU82GVz4', // Your first meditation video
-      title: 'Guided Meditation for Inner Peace',
-      description: 'A beautiful guided meditation session to help you find inner peace and tranquility. Perfect for beginners and experienced practitioners.',
+      title: 'Cosmic Meditation: Connecting with Universal Energy',
+      description: 'Journey through the cosmos and connect with the divine energy that flows through all galaxies. Experience the power of the Almighty Authority.',
       thumbnailUrl: 'https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg',
       courseId: 'course_1',
       duration: 1800, // 30 minutes
       orderIndex: 1,
-      tags: ['meditation', 'inner peace', 'guided'],
+      tags: ['cosmic', 'universe', 'divine energy', 'galaxies'],
     ),
     Video(
       id: 'video_2',
       youtubeId: 'aIIEI33EUqI', // Your second meditation video
-      title: 'Deep Relaxation Meditation',
-      description: 'Experience deep relaxation and stress relief through this powerful meditation practice. Let go of tension and find your center.',
+      title: 'Stellar Relaxation: Floating Among the Stars',
+      description: 'Float peacefully among the stars and experience the infinite calm of deep space. Feel the divine presence of the cosmic creator.',
       thumbnailUrl: 'https://img.youtube.com/vi/aIIEI33EUqI/maxresdefault.jpg',
       courseId: 'course_1',
       duration: 2100, // 35 minutes
       orderIndex: 2,
-      tags: ['meditation', 'relaxation', 'stress relief'],
+      tags: ['stars', 'cosmic relaxation', 'divine presence', 'space'],
     ),
     Video(
       id: 'video_3',
       youtubeId: 'j734gLbQFbU', // Your third meditation video
-      title: 'Mindfulness Meditation Practice',
-      description: 'Develop mindfulness and present moment awareness through this comprehensive meditation practice. Cultivate inner wisdom.',
+      title: 'Galaxy Mindfulness: Awareness of Cosmic Creation',
+      description: 'Develop cosmic awareness and witness the magnificent creation of galaxies by the Almighty Authority. Expand your consciousness to universal scales.',
       thumbnailUrl: 'https://img.youtube.com/vi/j734gLbQFbU/maxresdefault.jpg',
       courseId: 'course_1',
       duration: 2400, // 40 minutes
       orderIndex: 3,
-      tags: ['mindfulness', 'awareness', 'practice'],
+      tags: ['galaxy', 'cosmic awareness', 'creation', 'consciousness'],
     ),
     // Advanced Meditation Course - Your Additional Videos
     Video(

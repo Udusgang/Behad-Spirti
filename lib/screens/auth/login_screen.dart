@@ -5,6 +5,8 @@ import '../../providers/auth_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/auth/auth_text_field.dart';
 import '../../widgets/auth/auth_button.dart';
+import '../../widgets/cosmic/starfield_background.dart';
+import '../../widgets/cosmic/galaxy_animation.dart';
 import 'signup_screen.dart';
 import 'forgot_password_screen.dart';
 
@@ -46,24 +48,14 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppTheme.primaryPurple.withOpacity(0.8),
-              AppTheme.primaryPurple,
-              AppTheme.deepRed.withOpacity(0.8),
-            ],
-          ),
-        ),
+      body: StarfieldBackground(
+        starCount: 150,
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
             child: Column(
               children: [
-                const SizedBox(height: 60),
+                const SizedBox(height: 40),
                 _buildHeader(),
                 const SizedBox(height: 60),
                 _buildLoginForm(),
@@ -82,35 +74,42 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildHeader() {
     return Column(
       children: [
-        Container(
-          width: 120,
-          height: 120,
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
-          ),
-          child: const Icon(
-            Icons.self_improvement,
-            size: 60,
-            color: Colors.white,
-          ),
+        // Cosmic galaxy animation instead of static icon
+        const GalaxyAnimation(
+          size: 140,
+          primaryColor: Color(0xFF4C1D95),
+          secondaryColor: Color(0xFFFFD700),
         ),
         const SizedBox(height: 24),
         Text(
-          'Welcome Back',
+          'Welcome to the Universe',
           style: GoogleFonts.playfairDisplay(
             fontSize: 32,
             fontWeight: FontWeight.bold,
             color: Colors.white,
+            shadows: [
+              Shadow(
+                color: AppTheme.accentGold.withOpacity(0.5),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 8),
         Text(
-          'Continue your spiritual journey',
+          'Discover the cosmic wisdom of Almighty Authority',
+          textAlign: TextAlign.center,
           style: GoogleFonts.inter(
             fontSize: 16,
-            color: Colors.white.withOpacity(0.9),
+            color: AppTheme.starWhite.withOpacity(0.9),
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.5),
+                blurRadius: 5,
+                offset: const Offset(0, 1),
+              ),
+            ],
           ),
         ),
       ],

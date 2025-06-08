@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Spiritual-inspired color palette
-  static const Color primaryPurple = Color(0xFF6B46C1);
-  static const Color secondaryGreen = Color(0xFF059669);
-  static const Color accentGold = Color(0xFFF59E0B);
-  static const Color deepRed = Color(0xDC2626);
-  static const Color softViolet = Color(0xFF7C3AED);
+  // Cosmic Universe-inspired color palette
+  static const Color primaryPurple = Color(0xFF1A0B3D); // Deep space purple
+  static const Color secondaryGreen = Color(0xFF059669); // Keep for accent
+  static const Color accentGold = Color(0xFFFFD700); // Bright star gold
+  static const Color deepRed = Color(0xDC2626); // Keep for alerts
+  static const Color softViolet = Color(0xFF4C1D95); // Nebula violet
+
+  // Additional cosmic colors
+  static const Color galaxyBlue = Color(0xFF0F172A); // Dark cosmic blue
+  static const Color cosmicSilver = Color(0xFFC0C0C0); // Cosmic silver
+  static const Color deepSpace = Color(0xFF0C0A1A); // Deep space black
+  static const Color celestialBlue = Color(0xFF1E40AF); // Celestial blue
+  static const Color starWhite = Color(0xFFFFFBF0); // Star white
   
   // Neutral colors
   static const Color darkGray = Color(0xFF1F2937);
@@ -15,17 +22,32 @@ class AppTheme {
   static const Color lightGray = Color(0xFFF3F4F6);
   static const Color white = Color(0xFFFFFFFF);
   
-  // Background gradients
+  // Cosmic background gradients
   static const LinearGradient primaryGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [primaryPurple, softViolet],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [deepSpace, primaryPurple, softViolet],
+    stops: [0.0, 0.5, 1.0],
   );
-  
-  static const LinearGradient secondaryGradient = LinearGradient(
+
+  static const LinearGradient galaxyGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [secondaryGreen, Color(0xFF10B981)],
+    colors: [galaxyBlue, primaryPurple, celestialBlue],
+    stops: [0.0, 0.6, 1.0],
+  );
+
+  static const LinearGradient nebulaGradient = LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [softViolet, primaryPurple, deepSpace],
+    stops: [0.0, 0.4, 1.0],
+  );
+
+  static const LinearGradient starfieldGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [Color(0xFF000814), Color(0xFF001D3D), Color(0xFF003566)],
   );
 
   // Light theme
