@@ -115,18 +115,16 @@ class ProgressProvider with ChangeNotifier {
   }
 
   // Mark video as completed
-  Future<void> markVideoCompleted(String videoId, String courseId) async {
+  Future<void> markVideoCompleted(String videoId, String courseId, {int? videoDuration}) async {
     // Note: Video lookup will be handled by dynamic provider
     // For now, we'll just track progress without video validation
-    if (video != null) {
-      await updateVideoProgress(
-        videoId: videoId,
-        courseId: courseId,
-        watchedSeconds: video.duration,
-        totalDuration: video.duration,
-        isCompleted: true,
-      );
-    }
+    await updateVideoProgress(
+      videoId: videoId,
+      courseId: courseId,
+      watchedSeconds: videoDuration ?? 0,
+      totalDuration: videoDuration ?? 0,
+      isCompleted: true,
+    );
   }
 
   // Mark video as not completed
