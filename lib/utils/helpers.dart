@@ -79,13 +79,41 @@ class AppHelpers {
     return '${AppConstants.youtubeBaseUrl}$youtubeId';
   }
 
-  static String? extractYoutubeId(String url) {
+  static String? extractYoutubeId(String input) {
+    // Remove whitespace
+    input = input.trim();
+
+    // If it's already a video ID (11 characters, alphanumeric + - and _)
+    if (input.length == 11 && RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(input)) {
+      return input;
+    }
+
+    // YouTube URL patterns
     final regExp = RegExp(
       r'(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})',
       caseSensitive: false,
     );
-    final match = regExp.firstMatch(url);
+    final match = regExp.firstMatch(input);
     return match?.group(1);
+  }
+
+  // Validate YouTube video ID
+  static bool isValidYouTubeId(String id) {
+    return id.length == 11 && RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(id);
+  }
+
+  // Convert Color to hex string
+  static String colorToHex(Color color) {
+    return '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
+  }
+
+  // Convert hex string to Color
+  static Color hexToColor(String hex) {
+    hex = hex.replaceAll('#', '');
+    if (hex.length == 6) {
+      hex = 'FF$hex'; // Add alpha if not present
+    }
+    return Color(int.parse(hex, radix: 16));
   }
 
   // Validation helpers

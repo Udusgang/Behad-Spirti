@@ -319,6 +319,32 @@ class DynamicCourseProvider with ChangeNotifier {
     return _courses.reversed.take(3).toList();
   }
 
+  // Add new category
+  Future<void> addCategory(app_models.Category category) async {
+    try {
+      _setLoading(true);
+
+      // Set order based on current categories count
+      final categoryWithOrder = app_models.Category(
+        id: category.id,
+        name: category.name,
+        description: category.description,
+        iconPath: category.iconPath,
+        color: category.color,
+        courseIds: category.courseIds,
+        order: _categories.length + 1,
+      );
+
+      await _firestoreService.addCategory(categoryWithOrder);
+      _setError(null);
+    } catch (e) {
+      _setError('Failed to add category: $e');
+      rethrow;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   // Helper methods
   void _setLoading(bool loading) {
     _isLoading = loading;

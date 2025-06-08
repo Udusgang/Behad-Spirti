@@ -88,12 +88,17 @@ class CategoryCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.starWhite,
+                    color: Colors.white,
                     shadows: [
                       Shadow(
+                        color: Colors.black.withOpacity(0.8),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                      Shadow(
                         color: Colors.black.withOpacity(0.5),
-                        blurRadius: 3,
-                        offset: const Offset(0, 1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
@@ -107,12 +112,17 @@ class CategoryCard extends StatelessWidget {
                   category.description,
                   style: TextStyle(
                     fontSize: 12,
-                    color: AppTheme.cosmicSilver.withOpacity(0.9),
+                    color: Colors.white.withOpacity(0.95),
                     shadows: [
                       Shadow(
-                        color: Colors.black.withOpacity(0.5),
-                        blurRadius: 2,
+                        color: Colors.black.withOpacity(0.8),
+                        blurRadius: 3,
                         offset: const Offset(0, 1),
+                      ),
+                      Shadow(
+                        color: Colors.black.withOpacity(0.4),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),

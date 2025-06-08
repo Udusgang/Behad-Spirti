@@ -45,8 +45,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
 
     if (success && mounted) {
-      // Navigation will be handled by the auth state listener
-      Navigator.of(context).pushReplacementNamed('/home');
+      // Navigation will be handled by AuthWrapper automatically
+      // No need to manually navigate
     }
   }
 

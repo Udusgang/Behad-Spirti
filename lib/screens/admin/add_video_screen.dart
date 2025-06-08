@@ -161,32 +161,40 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // YouTube ID
+                // YouTube ID or URL
                 AuthTextField(
                   controller: _youtubeIdController,
-                  label: 'YouTube Video ID',
+                  label: 'YouTube Video ID or URL',
                   prefixIcon: Icons.play_circle,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter YouTube video ID';
+                      return 'Please enter YouTube video ID or URL';
                     }
-                    if (value.length != 11) {
-                      return 'YouTube ID should be 11 characters';
+                    final extractedId = AppHelpers.extractYoutubeId(value);
+                    if (extractedId == null || !AppHelpers.isValidYouTubeId(extractedId)) {
+                      return 'Please enter a valid YouTube ID or URL';
                     }
                     return null;
                   },
                   onChanged: (value) {
-                    // Auto-generate thumbnail URL
-                    if (value.length == 11) {
+                    // Auto-extract ID from URL and update preview
+                    final extractedId = AppHelpers.extractYoutubeId(value);
+                    if (extractedId != null && AppHelpers.isValidYouTubeId(extractedId)) {
                       setState(() {
-                        // Thumbnail URL will be auto-generated
+                        // Update the controller with just the ID if it was a URL
+                        if (value != extractedId) {
+                          _youtubeIdController.value = TextEditingValue(
+                            text: extractedId,
+                            selection: TextSelection.collapsed(offset: extractedId.length),
+                          );
+                        }
                       });
                     }
                   },
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Example: dQw4w9WgXcQ (from youtube.com/watch?v=dQw4w9WgXcQ)',
+                  'Paste YouTube URL or just the video ID\nExample: https://youtube.com/watch?v=dQw4w9WgXcQ or dQw4w9WgXcQ',
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     color: AppTheme.starWhite.withOpacity(0.6),
@@ -257,7 +265,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
                 const SizedBox(height: 24),
 
                 // Preview Section
-                if (_youtubeIdController.text.length == 11) ...[
+                if (_getValidYouTubeId() != null) ...[
                   _buildVideoPreview(),
                   const SizedBox(height: 24),
                 ],
@@ -323,8 +331,18 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
     );
   }
 
+  String? _getValidYouTubeId() {
+    final extractedId = AppHelpers.extractYoutubeId(_youtubeIdController.text);
+    if (extractedId != null && AppHelpers.isValidYouTubeId(extractedId)) {
+      return extractedId;
+    }
+    return null;
+  }
+
   Widget _buildVideoPreview() {
-    final youtubeId = _youtubeIdController.text;
+    final youtubeId = _getValidYouTubeId();
+    if (youtubeId == null) return const SizedBox.shrink();
+
     final thumbnailUrl = 'https://img.youtube.com/vi/$youtubeId/maxresdefault.jpg';
     
     return Column(
@@ -389,7 +407,17 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
           .where((tag) => tag.isNotEmpty)
           .toList();
 
-      final youtubeId = _youtubeIdController.text.trim();
+      final youtubeId = _getValidYouTubeId();
+      if (youtubeId == null) {
+        if (mounted) {
+          AppHelpers.showErrorSnackBar(context, 'Please enter a valid YouTube ID or URL');
+          setState(() {
+            _isLoading = false;
+          });
+        }
+        return;
+      }
+
       final thumbnailUrl = 'https://img.youtube.com/vi/$youtubeId/maxresdefault.jpg';
 
       final video = Video(

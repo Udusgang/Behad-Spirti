@@ -9,6 +9,7 @@ import '../../widgets/admin_route_guard.dart';
 import '../../utils/data_setup.dart';
 import 'add_course_screen.dart';
 import 'add_video_screen.dart';
+import 'add_category_screen.dart';
 import 'manage_content_screen.dart';
 
 class AdminPanelScreen extends StatelessWidget {
@@ -158,11 +159,14 @@ class AdminPanelScreen extends StatelessWidget {
             ),
             _buildActionCard(
               context,
-              'Setup Data',
-              'Add sample cosmic content',
-              Icons.rocket_launch,
+              'Add Category',
+              'Create new content categories',
+              Icons.category,
               AppTheme.secondaryGreen,
-              () => _setupInitialData(context),
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddCategoryScreen()),
+              ),
             ),
           ],
         ),
@@ -389,72 +393,7 @@ class AdminPanelScreen extends StatelessWidget {
     );
   }
 
-  void _setupInitialData(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Setup Initial Data'),
-        content: const Text(
-          'This will add sample cosmic courses and videos to your Firebase database. '
-          'Are you sure you want to proceed?'
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              await _performDataSetup(context);
-            },
-            child: const Text('Setup Data'),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Future<void> _performDataSetup(BuildContext context) async {
-    // Show loading dialog
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const AlertDialog(
-        content: Row(
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(width: 16),
-            Text('Setting up cosmic data...'),
-          ],
-        ),
-      ),
-    );
-
-    try {
-      await DataSetup.setupInitialData();
-
-      if (context.mounted) {
-        Navigator.pop(context); // Close loading dialog
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('🌌 Cosmic data setup complete!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        Navigator.pop(context); // Close loading dialog
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('❌ Setup failed: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
 
   void _showComingSoon(BuildContext context) {
     showDialog(
