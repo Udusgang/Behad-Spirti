@@ -102,20 +102,6 @@ class AppHelpers {
     return id.length == 11 && RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(id);
   }
 
-  // Convert Color to hex string
-  static String colorToHex(Color color) {
-    return '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
-  }
-
-  // Convert hex string to Color
-  static Color hexToColor(String hex) {
-    hex = hex.replaceAll('#', '');
-    if (hex.length == 6) {
-      hex = 'FF$hex'; // Add alpha if not present
-    }
-    return Color(int.parse(hex, radix: 16));
-  }
-
   // Validation helpers
   static bool isValidEmail(String email) {
     return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
