@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Video {
   final String id;
   final String youtubeId;
@@ -8,6 +10,8 @@ class Video {
   final int duration; // in seconds
   final int orderIndex;
   final List<String> tags;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   const Video({
     required this.id,
@@ -19,6 +23,8 @@ class Video {
     required this.duration,
     required this.orderIndex,
     required this.tags,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Video.fromJson(Map<String, dynamic> json) {
@@ -29,9 +35,15 @@ class Video {
       description: json['description'] as String,
       thumbnailUrl: json['thumbnailUrl'] as String,
       courseId: json['courseId'] as String,
-      duration: json['duration'] as int,
-      orderIndex: json['orderIndex'] as int,
-      tags: List<String>.from(json['tags'] as List),
+      duration: json['duration'] as int? ?? 0,
+      orderIndex: json['orderIndex'] as int? ?? 0,
+      tags: List<String>.from(json['tags'] as List? ?? []),
+      createdAt: json['createdAt'] != null
+          ? (json['createdAt'] as Timestamp).toDate()
+          : null,
+      updatedAt: json['updatedAt'] != null
+          ? (json['updatedAt'] as Timestamp).toDate()
+          : null,
     );
   }
 

@@ -5,6 +5,7 @@ class Category {
   final String iconPath;
   final String color; // Hex color string
   final List<String> courseIds;
+  final int order;
 
   const Category({
     required this.id,
@@ -13,6 +14,7 @@ class Category {
     required this.iconPath,
     required this.color,
     required this.courseIds,
+    this.order = 0,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) {
@@ -22,7 +24,8 @@ class Category {
       description: json['description'] as String,
       iconPath: json['iconPath'] as String,
       color: json['color'] as String,
-      courseIds: List<String>.from(json['courseIds'] as List),
+      courseIds: List<String>.from(json['courseIds'] as List? ?? []),
+      order: json['order'] as int? ?? 0,
     );
   }
 
@@ -34,6 +37,7 @@ class Category {
       'iconPath': iconPath,
       'color': color,
       'courseIds': courseIds,
+      'order': order,
     };
   }
 

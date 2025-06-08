@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Course {
   final String id;
   final String title;
@@ -8,6 +10,12 @@ class Course {
   final int estimatedDuration; // in minutes
   final String difficulty; // beginner, intermediate, advanced
   final List<String> tags;
+  final bool featured;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final String? instructorId;
+  final double? rating;
+  final int? enrollmentCount;
 
   const Course({
     required this.id,
@@ -19,6 +27,12 @@ class Course {
     required this.estimatedDuration,
     required this.difficulty,
     required this.tags,
+    this.featured = false,
+    this.createdAt,
+    this.updatedAt,
+    this.instructorId,
+    this.rating,
+    this.enrollmentCount,
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {
@@ -28,10 +42,20 @@ class Course {
       description: json['description'] as String,
       thumbnailUrl: json['thumbnailUrl'] as String,
       categoryId: json['categoryId'] as String,
-      videoIds: List<String>.from(json['videoIds'] as List),
-      estimatedDuration: json['estimatedDuration'] as int,
-      difficulty: json['difficulty'] as String,
-      tags: List<String>.from(json['tags'] as List),
+      videoIds: List<String>.from(json['videoIds'] as List? ?? []),
+      estimatedDuration: json['estimatedDuration'] as int? ?? 0,
+      difficulty: json['difficulty'] as String? ?? 'beginner',
+      tags: List<String>.from(json['tags'] as List? ?? []),
+      featured: json['featured'] as bool? ?? false,
+      createdAt: json['createdAt'] != null
+          ? (json['createdAt'] as Timestamp).toDate()
+          : null,
+      updatedAt: json['updatedAt'] != null
+          ? (json['updatedAt'] as Timestamp).toDate()
+          : null,
+      instructorId: json['instructorId'] as String?,
+      rating: (json['rating'] as num?)?.toDouble(),
+      enrollmentCount: json['enrollmentCount'] as int?,
     );
   }
 
@@ -46,6 +70,11 @@ class Course {
       'estimatedDuration': estimatedDuration,
       'difficulty': difficulty,
       'tags': tags,
+      'featured': featured,
+      'instructorId': instructorId,
+      'rating': rating,
+      'enrollmentCount': enrollmentCount,
+      // Note: createdAt and updatedAt are handled by Firestore
     };
   }
 

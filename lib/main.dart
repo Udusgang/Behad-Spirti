@@ -3,9 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'providers/providers.dart';
+import 'providers/dynamic_course_provider.dart';
+import 'providers/dynamic_progress_provider.dart';
 import 'theme/app_theme.dart';
 import 'utils/constants.dart';
 import 'screens/auth_wrapper.dart';
+import 'screens/admin/admin_panel_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,9 +42,12 @@ class SpiritApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: authProvider),
+        ChangeNotifierProvider(create: (_) => DynamicCourseProvider()),
+        ChangeNotifierProvider(create: (_) => DynamicProgressProvider()),
+        ChangeNotifierProvider(create: (_) => VideoProvider()),
+        // Keep old providers for backward compatibility
         ChangeNotifierProvider(create: (_) => CourseProvider()),
         ChangeNotifierProvider(create: (_) => ProgressProvider()),
-        ChangeNotifierProvider(create: (_) => VideoProvider()),
       ],
       child: MaterialApp(
         title: AppConstants.appName,
@@ -53,6 +59,9 @@ class SpiritApp extends StatelessWidget {
           ),
         ),
         home: const AuthWrapper(),
+        routes: {
+          '/admin': (context) => const AdminPanelScreen(),
+        },
       ),
     );
   }
