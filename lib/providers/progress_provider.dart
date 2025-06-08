@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../models/models.dart';
-import '../data/static_data.dart';
+
 
 class ProgressProvider with ChangeNotifier {
   UserProgress _userProgress = UserProgress(

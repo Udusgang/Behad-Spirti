@@ -104,9 +104,9 @@ class DynamicCourseProvider with ChangeNotifier {
     try {
       await Future.delayed(const Duration(milliseconds: 500));
       
-      _categories = StaticData.categories;
-      _courses = StaticData.courses;
-      _videos = StaticData.videos;
+      _categories = [];
+      _courses = [];
+      _videos = [];
       
       _error = null;
     } catch (e) {
