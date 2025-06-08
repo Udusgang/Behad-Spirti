@@ -19,9 +19,17 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.admin_panel_settings),
-            onPressed: () => Navigator.pushNamed(context, '/admin'),
+          Consumer<AuthProvider>(
+            builder: (context, authProvider, child) {
+              // Only show admin button for admin users
+              if (authProvider.currentUser?.isAdmin == true) {
+                return IconButton(
+                  icon: const Icon(Icons.admin_panel_settings),
+                  onPressed: () => Navigator.pushNamed(context, '/admin'),
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
           IconButton(
             icon: const Icon(Icons.logout),
@@ -108,6 +116,25 @@ class ProfileScreen extends StatelessWidget {
                   color: Colors.white70,
                 ),
               ),
+              if (user?.isAdmin == true) ...[
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppTheme.accentGold,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text(
+                    'COSMIC ADMIN',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ],
           const SizedBox(height: 16),
           Consumer<ProgressProvider>(
             builder: (context, progressProvider, child) {

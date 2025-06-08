@@ -51,6 +51,9 @@ class AuthService {
       await user.updateDisplayName(displayName);
 
       // Create user document in Firestore
+      // Check if this is the first user (make them admin)
+      final isFirstUser = await _isFirstUser();
+
       final appUser = AppUser(
         uid: user.uid,
         email: email,
@@ -58,6 +61,7 @@ class AuthService {
         photoURL: user.photoURL,
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
+        role: isFirstUser ? 'admin' : 'user', // First user becomes admin
         preferences: {
           'notifications': true,
           'darkMode': false,
@@ -145,6 +149,16 @@ class AuthService {
       return AuthResult.failure(_getErrorMessage(e.code));
     } catch (e) {
       return AuthResult.failure('An unexpected error occurred');
+    }
+  }
+
+  // Check if this is the first user (to make them admin)
+  Future<bool> _isFirstUser() async {
+    try {
+      final snapshot = await _firestore.collection('users').limit(1).get();
+      return snapshot.docs.isEmpty;
+    } catch (e) {
+      return false; // If error, assume not first user
     }
   }
 

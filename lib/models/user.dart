@@ -6,6 +6,7 @@ class AppUser {
   final DateTime createdAt;
   final DateTime lastLoginAt;
   final Map<String, dynamic> preferences;
+  final String role; // 'user' or 'admin'
 
   const AppUser({
     required this.uid,
@@ -15,6 +16,7 @@ class AppUser {
     required this.createdAt,
     required this.lastLoginAt,
     this.preferences = const {},
+    this.role = 'user',
   });
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class AppUser {
       createdAt: DateTime.parse(json['createdAt'] as String),
       lastLoginAt: DateTime.parse(json['lastLoginAt'] as String),
       preferences: json['preferences'] as Map<String, dynamic>? ?? {},
+      role: json['role'] as String? ?? 'user',
     );
   }
 
@@ -38,6 +41,7 @@ class AppUser {
       'createdAt': createdAt.toIso8601String(),
       'lastLoginAt': lastLoginAt.toIso8601String(),
       'preferences': preferences,
+      'role': role,
     };
   }
 
@@ -49,6 +53,7 @@ class AppUser {
     DateTime? createdAt,
     DateTime? lastLoginAt,
     Map<String, dynamic>? preferences,
+    String? role,
   }) {
     return AppUser(
       uid: uid ?? this.uid,
@@ -58,6 +63,7 @@ class AppUser {
       createdAt: createdAt ?? this.createdAt,
       lastLoginAt: lastLoginAt ?? this.lastLoginAt,
       preferences: preferences ?? this.preferences,
+      role: role ?? this.role,
     );
   }
 
@@ -80,4 +86,5 @@ class AppUser {
 
   bool get hasDisplayName => displayName != null && displayName!.isNotEmpty;
   bool get hasPhotoURL => photoURL != null && photoURL!.isNotEmpty;
+  bool get isAdmin => role == 'admin';
 }
