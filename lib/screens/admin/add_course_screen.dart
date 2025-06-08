@@ -369,36 +369,24 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
       final courseProvider = context.read<DynamicCourseProvider>();
       final success = await courseProvider.addCourse(course);
 
-      if (success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Course created successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.pop(context);
-      } else if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(courseProvider.error ?? 'Failed to create course'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
+
+        if (success) {
+          AppHelpers.showSuccessSnackBar(context, 'Course created successfully!');
+          Navigator.pop(context);
+        } else {
+          AppHelpers.showErrorSnackBar(context, courseProvider.error ?? 'Failed to create course');
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        AppHelpers.showErrorSnackBar(context, 'Error: $e');
       }
     }
   }

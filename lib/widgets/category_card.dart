@@ -26,27 +26,34 @@ class CategoryCard extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              categoryColor.withOpacity(0.9),
-              categoryColor.withOpacity(0.7),
-              AppTheme.deepSpace.withOpacity(0.8),
+              categoryColor.withOpacity(0.95),
+              categoryColor.withOpacity(0.8),
+              AppTheme.deepSpace.withOpacity(0.9),
             ],
-            stops: const [0.0, 0.6, 1.0],
+            stops: const [0.0, 0.5, 1.0],
           ),
           borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           border: Border.all(
-            color: AppTheme.accentGold.withOpacity(0.3),
-            width: 1,
+            color: AppTheme.accentGold.withOpacity(0.5),
+            width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: categoryColor.withOpacity(0.4),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
+              color: categoryColor.withOpacity(0.6),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
             ),
             BoxShadow(
-              color: AppTheme.accentGold.withOpacity(0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+              color: AppTheme.accentGold.withOpacity(0.2),
+              blurRadius: 25,
+              offset: const Offset(0, 12),
+            ),
+            // Add inner glow effect
+            BoxShadow(
+              color: Colors.white.withOpacity(0.1),
+              blurRadius: 5,
+              offset: const Offset(0, 1),
+              spreadRadius: -2,
             ),
           ],
         ),
@@ -56,29 +63,34 @@ class CategoryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Cosmic icon with glow effect
+              // Cosmic icon with enhanced glow effect
               Container(
-                width: 48,
-                height: 48,
+                width: 52,
+                height: 52,
                 decoration: BoxDecoration(
-                  color: AppTheme.accentGold.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
+                  color: AppTheme.accentGold.withOpacity(0.25),
+                  borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                    color: AppTheme.accentGold.withOpacity(0.4),
-                    width: 1,
+                    color: AppTheme.accentGold.withOpacity(0.6),
+                    width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppTheme.accentGold.withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+                      color: AppTheme.accentGold.withOpacity(0.4),
+                      blurRadius: 12,
+                      offset: const Offset(0, 3),
+                    ),
+                    BoxShadow(
+                      color: AppTheme.accentGold.withOpacity(0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 6),
                     ),
                   ],
                 ),
                 child: Icon(
                   _getCategoryIcon(category.id),
                   color: AppTheme.starWhite,
-                  size: 28,
+                  size: 30,
                 ),
               ),
               const SizedBox(height: 12),

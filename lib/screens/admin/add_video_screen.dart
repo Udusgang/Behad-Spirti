@@ -162,18 +162,18 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // YouTube ID or URL
+                // YouTube ID (preferred) or URL
                 AuthTextField(
                   controller: _youtubeIdController,
-                  label: 'YouTube Video ID or URL',
+                  label: 'YouTube Video ID (Preferred)',
                   prefixIcon: Icons.play_circle,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter YouTube video ID or URL';
+                      return 'Please enter YouTube video ID';
                     }
                     final extractedId = AppHelpers.extractYoutubeId(value);
                     if (extractedId == null || !AppHelpers.isValidYouTubeId(extractedId)) {
-                      return 'Please enter a valid YouTube ID or URL';
+                      return 'Please enter a valid YouTube ID (11 characters)';
                     }
                     return null;
                   },
@@ -182,7 +182,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
                     final extractedId = AppHelpers.extractYoutubeId(value);
                     if (extractedId != null && AppHelpers.isValidYouTubeId(extractedId)) {
                       setState(() {
-                        // Update the controller with just the ID if it was a URL
+                        // Always update the controller with just the ID for consistency
                         if (value != extractedId) {
                           _youtubeIdController.value = TextEditingValue(
                             text: extractedId,
@@ -195,7 +195,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Paste YouTube URL or just the video ID\nExample: https://youtube.com/watch?v=dQw4w9WgXcQ or dQw4w9WgXcQ',
+                  'Enter just the video ID (e.g., dQw4w9WgXcQ) or paste full URL\nThe system will automatically extract the ID from URLs',
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     color: AppTheme.starWhite.withOpacity(0.6),
@@ -436,36 +436,24 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
       final courseProvider = context.read<DynamicCourseProvider>();
       final success = await courseProvider.addVideo(video);
 
-      if (success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Video added successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.pop(context);
-      } else if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(courseProvider.error ?? 'Failed to add video'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
+
+        if (success) {
+          AppHelpers.showSuccessSnackBar(context, 'Video added successfully!');
+          Navigator.pop(context);
+        } else {
+          AppHelpers.showErrorSnackBar(context, courseProvider.error ?? 'Failed to add video');
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        AppHelpers.showErrorSnackBar(context, 'Error: $e');
       }
     }
   }

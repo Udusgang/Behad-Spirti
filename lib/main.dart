@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'providers/providers.dart';
 import 'providers/dynamic_course_provider.dart';
 import 'providers/dynamic_progress_provider.dart';
+import 'providers/video_provider.dart';
 import 'theme/app_theme.dart';
 import 'utils/constants.dart';
 import 'screens/auth_wrapper.dart';
@@ -44,9 +45,9 @@ class SpiritApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: authProvider),
         ChangeNotifierProvider(create: (_) => DynamicCourseProvider()),
         ChangeNotifierProvider(create: (_) => DynamicProgressProvider()),
+        ChangeNotifierProvider(create: (_) => VideoProvider()),
 
         // Keep old providers for backward compatibility
-        ChangeNotifierProvider(create: (_) => DynamicCourseProvider()),
         ChangeNotifierProvider(create: (_) => ProgressProvider()),
       ],
       child: MaterialApp(
