@@ -242,10 +242,10 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
               value: _selectedCategoryId.isEmpty ? null : _selectedCategoryId,
               hint: const Text('Select Category'),
               isExpanded: true,
-              items: courseProvider.categories.map<DropdownMenuItem<String>>((category) {
+              items: courseProvider.categories.map<DropdownMenuItem<String>>((dynamic category) {
                 return DropdownMenuItem<String>(
-                  value: category.id,
-                  child: Text(category.name),
+                  value: category.id as String,
+                  child: Text(category.name as String),
                 );
               }).toList(),
               onChanged: (value) {

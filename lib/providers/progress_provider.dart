@@ -61,6 +61,7 @@ class ProgressProvider with ChangeNotifier {
         videoId: videoId,
         isCompleted: completed,
         watchedSeconds: watchedSeconds,
+        totalSeconds: totalDuration,
         lastWatchedAt: now,
       );
 
@@ -131,6 +132,7 @@ class ProgressProvider with ChangeNotifier {
         videoId: videoId,
         isCompleted: false,
         watchedSeconds: currentProgress?.watchedSeconds ?? 0,
+        totalSeconds: currentProgress?.totalSeconds ?? 0,
         lastWatchedAt: now,
       );
 

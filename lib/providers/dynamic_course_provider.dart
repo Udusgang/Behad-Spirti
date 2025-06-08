@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'dart:async';
-import '../models/category.dart';
+import '../models/category.dart' as app_models;
 import '../models/course.dart';
 import '../models/video.dart';
 import '../services/firestore_service.dart';
@@ -9,21 +9,21 @@ import '../data/static_data.dart';
 class DynamicCourseProvider with ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
   
-  List<Category> _categories = [];
+  List<app_models.Category> _categories = [];
   List<Course> _courses = [];
   List<Video> _videos = [];
-  
+
   bool _isLoading = false;
   String? _error;
   bool _useFirestore = true; // Toggle between Firestore and static data
-  
+
   // Stream subscriptions
-  StreamSubscription<List<Category>>? _categoriesSubscription;
+  StreamSubscription<List<app_models.Category>>? _categoriesSubscription;
   StreamSubscription<List<Course>>? _coursesSubscription;
   StreamSubscription<List<Video>>? _videosSubscription;
 
   // Getters
-  List<Category> get categories => _categories;
+  List<app_models.Category> get categories => _categories;
   List<Course> get courses => _courses;
   List<Video> get videos => _videos;
   bool get isLoading => _isLoading;
@@ -259,7 +259,7 @@ class DynamicCourseProvider with ChangeNotifier {
   }
 
   // Get category by ID
-  Category? getCategoryById(String categoryId) {
+  app_models.Category? getCategoryById(String categoryId) {
     try {
       return _categories.firstWhere((category) => category.id == categoryId);
     } catch (e) {
