@@ -7,6 +7,7 @@ import '../../widgets/auth/auth_text_field.dart';
 import '../../widgets/auth/auth_button.dart';
 import '../../widgets/cosmic/starfield_background.dart';
 import '../../widgets/cosmic/galaxy_animation.dart';
+import '../../utils/helpers.dart';
 import 'login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -44,9 +45,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       displayName: _nameController.text.trim(),
     );
 
-    if (success && mounted) {
-      // Navigation will be handled by AuthWrapper automatically
-      // No need to manually navigate
+    if (mounted) {
+      if (success) {
+        AppHelpers.showSuccessSnackBar(context, 'Account created successfully! Welcome to Almighty Authority.');
+        // Navigation will be handled by AuthWrapper automatically
+      } else {
+        AppHelpers.showErrorSnackBar(context, authProvider.errorMessage ?? 'Sign up failed');
+      }
     }
   }
 

@@ -617,6 +617,9 @@ class ProfileScreen extends StatelessWidget {
                 Navigator.of(context).pop();
                 final authProvider = context.read<AuthProvider>();
                 await authProvider.signOut();
+                if (mounted) {
+                  AppHelpers.showSuccessSnackBar(context, 'Signed out successfully. See you soon!');
+                }
               },
               child: const Text(
                 'Sign Out',

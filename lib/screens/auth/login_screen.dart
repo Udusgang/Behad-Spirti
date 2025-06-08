@@ -7,6 +7,7 @@ import '../../widgets/auth/auth_text_field.dart';
 import '../../widgets/auth/auth_button.dart';
 import '../../widgets/cosmic/starfield_background.dart';
 import '../../widgets/cosmic/galaxy_animation.dart';
+import '../../utils/helpers.dart';
 import 'signup_screen.dart';
 import 'forgot_password_screen.dart';
 
@@ -39,9 +40,13 @@ class _LoginScreenState extends State<LoginScreen> {
       password: _passwordController.text,
     );
 
-    if (success && mounted) {
-      // Navigation will be handled by AuthWrapper automatically
-      // No need to manually navigate
+    if (mounted) {
+      if (success) {
+        AppHelpers.showSuccessSnackBar(context, 'Welcome back! Login successful.');
+        // Navigation will be handled by AuthWrapper automatically
+      } else {
+        AppHelpers.showErrorSnackBar(context, authProvider.errorMessage ?? 'Login failed');
+      }
     }
   }
 

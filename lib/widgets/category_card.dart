@@ -26,123 +26,49 @@ class CategoryCard extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              categoryColor.withOpacity(0.95),
-              categoryColor.withOpacity(0.8),
-              AppTheme.deepSpace.withOpacity(0.9),
+              categoryColor.withOpacity(0.9),
+              categoryColor.withOpacity(0.7),
+              AppTheme.deepSpace.withOpacity(0.8),
             ],
-            stops: const [0.0, 0.5, 1.0],
           ),
-          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: AppTheme.accentGold.withOpacity(0.5),
-            width: 1.5,
+            color: AppTheme.accentGold.withOpacity(0.3),
+            width: 1,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: categoryColor.withOpacity(0.6),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
-            ),
-            BoxShadow(
-              color: AppTheme.accentGold.withOpacity(0.2),
-              blurRadius: 25,
-              offset: const Offset(0, 12),
-            ),
-            // Add inner glow effect
-            BoxShadow(
-              color: Colors.white.withOpacity(0.1),
-              blurRadius: 5,
-              offset: const Offset(0, 1),
-              spreadRadius: -2,
-            ),
-          ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(AppConstants.defaultPadding),
+          padding: const EdgeInsets.all(16),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Cosmic icon with enhanced glow effect
-              Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  color: AppTheme.accentGold.withOpacity(0.25),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: AppTheme.accentGold.withOpacity(0.6),
-                    width: 1.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.accentGold.withOpacity(0.4),
-                      blurRadius: 12,
-                      offset: const Offset(0, 3),
-                    ),
-                    BoxShadow(
-                      color: AppTheme.accentGold.withOpacity(0.2),
-                      blurRadius: 20,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  _getCategoryIcon(category.id),
-                  color: AppTheme.starWhite,
-                  size: 30,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Flexible(
-                child: Text(
-                  category.name,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black.withOpacity(0.8),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                      Shadow(
-                        color: Colors.black.withOpacity(0.5),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Flexible(
-                child: Text(
-                  category.description,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white.withOpacity(0.95),
-                    shadows: [
-                      Shadow(
-                        color: Colors.black.withOpacity(0.8),
-                        blurRadius: 3,
-                        offset: const Offset(0, 1),
-                      ),
-                      Shadow(
-                        color: Colors.black.withOpacity(0.4),
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
+              Icon(
+                _getCategoryIcon(category.id),
+                color: Colors.white,
+                size: 24,
               ),
               const SizedBox(height: 8),
+              Text(
+                category.name,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                category.description,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white.withOpacity(0.8),
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const Spacer(),
               Row(
                 children: [
                   Text(

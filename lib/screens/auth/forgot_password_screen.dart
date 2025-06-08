@@ -5,6 +5,7 @@ import '../../providers/auth_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/auth/auth_text_field.dart';
 import '../../widgets/auth/auth_button.dart';
+import '../../utils/helpers.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -30,10 +31,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final authProvider = context.read<AuthProvider>();
     final success = await authProvider.resetPassword(_emailController.text.trim());
 
-    if (success && mounted) {
-      setState(() {
-        _emailSent = true;
-      });
+    if (mounted) {
+      if (success) {
+        AppHelpers.showSuccessSnackBar(context, 'Password reset email sent successfully!');
+        setState(() {
+          _emailSent = true;
+        });
+      } else {
+        AppHelpers.showErrorSnackBar(context, authProvider.errorMessage ?? 'Failed to send reset email');
+      }
     }
   }
 

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../providers/dynamic_course_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/cosmic/starfield_background.dart';
+import '../../utils/helpers.dart';
 
 class ManageContentScreen extends StatefulWidget {
   const ManageContentScreen({super.key});
@@ -428,16 +429,12 @@ class _ManageContentScreenState extends State<ManageContentScreen>
 
   void _editCourse(course) {
     // TODO: Implement edit course functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Edit course feature coming soon!')),
-    );
+    AppHelpers.showInfoSnackBar(context, 'Edit course feature coming soon!');
   }
 
   void _editVideo(video) {
     // TODO: Implement edit video functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Edit video feature coming soon!')),
-    );
+    AppHelpers.showInfoSnackBar(context, 'Edit video feature coming soon!');
   }
 
   void _deleteCourse(course, DynamicCourseProvider courseProvider) {
@@ -456,12 +453,11 @@ class _ManageContentScreenState extends State<ManageContentScreen>
               Navigator.pop(context);
               final success = await courseProvider.deleteCourse(course.id);
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(success ? 'Course deleted' : 'Failed to delete course'),
-                    backgroundColor: success ? Colors.green : Colors.red,
-                  ),
-                );
+                if (success) {
+                  AppHelpers.showSuccessSnackBar(context, 'Course deleted successfully!');
+                } else {
+                  AppHelpers.showErrorSnackBar(context, 'Failed to delete course');
+                }
               }
             },
             child: const Text('Delete', style: TextStyle(color: Colors.red)),
@@ -487,12 +483,11 @@ class _ManageContentScreenState extends State<ManageContentScreen>
               Navigator.pop(context);
               final success = await courseProvider.deleteVideo(video.id);
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(success ? 'Video deleted' : 'Failed to delete video'),
-                    backgroundColor: success ? Colors.green : Colors.red,
-                  ),
-                );
+                if (success) {
+                  AppHelpers.showSuccessSnackBar(context, 'Video deleted successfully!');
+                } else {
+                  AppHelpers.showErrorSnackBar(context, 'Failed to delete video');
+                }
               }
             },
             child: const Text('Delete', style: TextStyle(color: Colors.red)),
