@@ -12,6 +12,7 @@ class DynamicCourseProvider with ChangeNotifier {
   List<app_models.Category> _categories = [];
   List<Course> _courses = [];
   List<Video> _videos = [];
+  List<String> _quotes = [];
 
   bool _isLoading = false;
   String? _error;
@@ -26,6 +27,7 @@ class DynamicCourseProvider with ChangeNotifier {
   List<app_models.Category> get categories => _categories;
   List<Course> get courses => _courses;
   List<Video> get videos => _videos;
+  List<String> get quotes => _quotes;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get useFirestore => _useFirestore;
@@ -107,6 +109,16 @@ class DynamicCourseProvider with ChangeNotifier {
       _categories = [];
       _courses = [];
       _videos = [];
+      _quotes = [
+        "The universe is not only stranger than we imagine, it is stranger than we can imagine. - J.B.S. Haldane",
+        "We are all made of star stuff. - Carl Sagan",
+        "The cosmos is within us. We are made of star-stuff. - Carl Sagan",
+        "Look up at the stars and not down at your feet. - Stephen Hawking",
+        "The universe is under no obligation to make sense to you. - Neil deGrasse Tyson",
+        "The divine light of the Almighty Authority shines through every star in the cosmos.",
+        "In the vastness of space, we find the infinite wisdom of creation.",
+        "Peace comes from within. Do not seek it without. - Buddha",
+      ];
       
       _error = null;
     } catch (e) {

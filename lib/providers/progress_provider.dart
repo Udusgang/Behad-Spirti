@@ -116,7 +116,8 @@ class ProgressProvider with ChangeNotifier {
 
   // Mark video as completed
   Future<void> markVideoCompleted(String videoId, String courseId) async {
-    final video = StaticData.getVideoById(videoId);
+    // Note: Video lookup will be handled by dynamic provider
+    // For now, we'll just track progress without video validation
     if (video != null) {
       await updateVideoProgress(
         videoId: videoId,

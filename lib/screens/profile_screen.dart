@@ -4,7 +4,7 @@ import '../providers/providers.dart';
 import '../theme/app_theme.dart';
 import '../utils/constants.dart';
 import '../utils/helpers.dart';
-import '../data/static_data.dart';
+
 import '../debug/icon_test_screen.dart';
 import 'dart:math' as math;
 
@@ -188,9 +188,14 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildQuoteOfTheDay(BuildContext context) {
-    final quote = StaticData.motivationalQuotes[
-        math.Random().nextInt(StaticData.motivationalQuotes.length)
-    ];
+    return Consumer<DynamicCourseProvider>(
+      builder: (context, courseProvider, child) {
+        final quotes = courseProvider.quotes;
+        if (quotes.isEmpty) {
+          return const SizedBox.shrink(); // Hide if no quotes
+        }
+
+        final quote = quotes[math.Random().nextInt(quotes.length)];
 
     return Container(
       padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -222,6 +227,8 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+      },
     );
   }
 
